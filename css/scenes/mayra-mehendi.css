@@ -1,0 +1,79 @@
+/* mayra-mehendi.css — scene 3 of 7. Owned by js/scenes/mayra-mehendi.js.
+ *
+ * Everything is scoped to .scene[data-scene="mayra-mehendi"]. All lengths are DESIGN px
+ * (1080x1920) — the frame is uniformly scaled, so design px are the only unit that keeps
+ * chrome locked to the artwork on every screen.
+ *
+ * Motion lives in JS (js/fx/kit.js). This file only places the tap target, declares the
+ * two pivots the scene's combined transform loops rotate about, tints the kit chrome,
+ * and provides the one static style the day->night transition toggles.
+ */
+
+/* ------------------------------------------------------------------- pivots */
+/* The balloon and the dancer each carry translate AND rotate in a single transform
+   loop, and the lift re-uses the balloon's pivot AFTER that loop has been stopped — so
+   the origin is declared here rather than written inline by whichever loop is running.
+   With no transform applied these declarations change nothing: the resting frame is
+   still the PSD frame, and the engine's entry cascade is a pure translation. */
+
+.scene[data-scene="mayra-mehendi"] [data-layer="balloon"] {
+  /* the apex of the cage ring, where the envelope is actually held — the basket swings
+     from it, 369 design px below */
+  transform-origin: 52% 0%;
+}
+
+.scene[data-scene="mayra-mehendi"] [data-layer="dancer"] {
+  transform-origin: 50% 100%; /* his feet stay on the step */
+}
+
+/* ---------------------------------------------------------------- tap target */
+/* The balloon cutout is a 235x369 rect that is mostly transparent, so the gesture gets
+   its own box: the PSD rect + 64 design px of slop (~23 css px on a 390px phone, on top
+   of the balloon's own ~85 css px), clamped to the frame's left edge. Invisible by
+   design — js/fx/kit.js draws the only affordance the guest ever sees. */
+
+.scene[data-scene="mayra-mehendi"] .mm-hit {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 470; /* above every layer, below the hint (480) and .scene-text (500) */
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  padding: 0;
+  border: 0;
+  border-radius: 60px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation; /* no 300ms double-tap-zoom wait on the signature gesture */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene[data-scene="mayra-mehendi"] .mm-hit:disabled {
+  cursor: default;
+}
+
+/* keyboard users get the same gesture; the outline is the only time this box paints */
+.scene[data-scene="mayra-mehendi"] .mm-hit:focus-visible {
+  outline: 4px solid var(--rose, #b4425f);
+  outline-offset: -12px;
+}
+
+/* --------------------------------------------------------------- transition */
+/* "mayra-balloon" fades the day out layer by layer so the balloon can hold full opacity
+   over the arriving night. The scene element itself must therefore stop painting its
+   blush ground tint, or the night would never show through. A static switch, not an
+   animation — js/scenes/mayra-mehendi.js adds and removes the class. */
+
+.scene[data-scene="mayra-mehendi"].mm-away {
+  background-color: transparent;
+}
+
+/* --------------------------------------------------------------------- hint */
+/* The tap ring sits on pale blush paper against a pink balloon, where a cool ivory glow
+   would disappear — warm it into the scene's own rose. */
+
+.scene[data-scene="mayra-mehendi"] .fx-hint {
+  --fx-ink: rgba(255, 250, 243, 0.98);
+  --fx-glow: rgba(180, 66, 95, 0.5);
+}

@@ -1,0 +1,95 @@
+/* haldi.css — scene 5 of 7. Owned by js/scenes/haldi.js.
+ *
+ * Everything is scoped to .scene[data-scene="haldi"]. All lengths are DESIGN px
+ * (1080x1920): the frame is uniformly scaled, so design px are the only unit that
+ * keeps chrome locked to the artwork on every screen.
+ *
+ * Motion lives in JS (js/fx/kit.js). This file places the smear surface and the hit
+ * target, and tints the kit chrome.
+ */
+
+/* ------------------------------------------------------------ smear surface */
+/* The turmeric canvas: the couple's rect + 80 design px of slop, sitting at z 105 —
+ * ABOVE the couple (z 100) and BELOW the foreground pot (110), blossoms (120) and
+ * lamps (130-160), so the haldi lands on the two of them and nothing in front of them
+ * gets stained.
+ *
+ * Pure paint, and nothing else: the stroke walks a timed path rather than a finger, so
+ * the surface takes no input at all — .hd-hit above it is the one thing a tap can land
+ * on.
+ *
+ * The stain is blended INSIDE the canvas (js/scenes/haldi.js sets
+ * globalCompositeOperation = "multiply" on the 2D context), so this element composites
+ * normally. There is deliberately no `mix-blend-mode` here: a compositor blend forces
+ * a backing buffer for the whole stacking context beneath the canvas and defeats
+ * tiling, on the heaviest scene in the invitation, at the exact moment the guest taps.
+ */
+
+.scene[data-scene="haldi"] .hd-smear {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 105;
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------- pop dots */
+/* Marigold sparks that follow the stroke. Geometric light only: a dot and its glow,
+   never a drawn flower. Each one lives for well under a second. */
+
+.scene[data-scene="haldi"] .hd-pop {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 106;
+  width: var(--s, 12px);
+  height: var(--s, 12px);
+  margin: calc(var(--s, 12px) / -2) 0 0 calc(var(--s, 12px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #ffe6a8 0%, #f2a53a 46%, rgba(226, 124, 32, 0) 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------- hit target */
+/* The couple + their slop, as a plain button: one tap here puts the haldi on. Sits at
+   z 470 — above the smear canvas it stands in front of, below the kit's hint (480),
+   which draws the only affordance the guest ever sees. Invisible by design. */
+
+.scene[data-scene="haldi"] .hd-hit {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 470;
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  padding: 0;
+  border: 0;
+  border-radius: 60px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation; /* no 300ms double-tap-zoom wait on the signature gesture */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene[data-scene="haldi"] .hd-hit:disabled {
+  cursor: default;
+}
+
+/* keyboard users get the same gesture; the outline is the only time this box paints */
+.scene[data-scene="haldi"] .hd-hit:focus-visible {
+  outline: 4px solid var(--gold-hi, #e8d2a2);
+  outline-offset: -10px;
+}
+
+/* --------------------------------------------------------------------- hint */
+/* The tap hint sits over the couple, on pale green grass and paler cushions — warm
+   the glow to marigold so the ivory core still reads there. */
+
+.scene[data-scene="haldi"] .fx-hint {
+  --fx-ink: rgba(255, 252, 240, 0.98);
+  --fx-glow: rgba(226, 150, 38, 0.5);
+}

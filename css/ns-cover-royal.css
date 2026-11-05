@@ -1,0 +1,140 @@
+/* Slide 1 — Rajasthani royal hero (replaces visible Taj copy layout). */
+
+.scene[data-scene="cover"].has-ns-cover-royal {
+  --scene-bg: #3d0a0f;
+  --scene-ink: #f8e8c8;
+}
+
+.scene[data-scene="cover"].has-ns-cover-royal .layer,
+.scene[data-scene="cover"].has-ns-cover-royal .cv-cartouche {
+  opacity: 0.06;
+}
+
+.scene[data-scene="cover"].has-ns-cover-royal .scene-text {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.scene[data-scene="cover"].has-ns-cover-royal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 115;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 45% at 50% 0%, rgba(212, 160, 74, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(74, 14, 18, 0.65) 0%, transparent 55%),
+    linear-gradient(180deg, #5c1a1f 0%, #2d0a0e 38%, #1a0508 100%);
+}
+
+.ns-cover-royal {
+  position: absolute;
+  inset: 0;
+  z-index: 480;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 48px 200px;
+}
+
+.ns-cover-royal__arch {
+  position: absolute;
+  left: 50%;
+  top: 88px;
+  width: 920px;
+  height: 1180px;
+  margin-left: -460px;
+  border: 3px solid rgba(212, 160, 74, 0.55);
+  border-radius: 460px 460px 12px 12px;
+  box-shadow:
+    inset 0 0 80px rgba(212, 160, 74, 0.12),
+    0 0 0 12px rgba(74, 14, 18, 0.35),
+    0 24px 80px rgba(0, 0, 0, 0.45);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(212, 160, 74, 0.07) 0 14px,
+      transparent 14px 28px
+    ),
+    radial-gradient(ellipse 80% 50% at 50% 20%, rgba(139, 26, 43, 0.25) 0%, transparent 60%);
+  opacity: 0.92;
+}
+
+.ns-cover-royal__arch::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -28px;
+  width: 200px;
+  height: 56px;
+  margin-left: -100px;
+  background: linear-gradient(180deg, #d4a04a 0%, #8b6914 100%);
+  clip-path: polygon(8% 100%, 50% 0, 92% 100%);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+}
+
+.ns-cover-royal__panel {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 880px;
+  text-align: center;
+  color: #fff8e6;
+}
+
+.ns-cover-royal__name {
+  margin: 0;
+  font: 700 72px/1.08 "Rungkut", "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 2px 0 rgba(26, 5, 8, 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.ns-cover-royal__name--a {
+  margin-bottom: 8px;
+}
+
+.ns-cover-royal__name--b {
+  margin-top: 8px;
+}
+
+.ns-cover-royal__amp {
+  margin: 0;
+  font: 600 52px/1 "Cormorant Garamond", Georgia, serif;
+  color: #d4a04a;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+.ns-cover-royal__tag {
+  margin: 44px 0 0;
+  font: 600 38px/1.35 "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.02em;
+  color: #f3dfad;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+
+.ns-cover-royal__dates {
+  margin: 28px 0 0;
+  font: 700 44px/1.25 "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.06em;
+  color: #fff8e6;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.ns-cover-royal__venue {
+  margin: 20px 0 0;
+  font: 600 36px/1.4 "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.03em;
+  color: #e8c890;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.scene[data-scene="cover"].has-ns-cover-royal .cv-hit {
+  left: 0 !important;
+  top: 0 !important;
+  width: 1080px !important;
+  height: 1920px !important;
+  border-radius: 0;
+}

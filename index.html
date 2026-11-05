@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Dr. Nandini &amp; Dr. Shubham · Wedding Celebrations</title>
+  <meta name="theme-color" content="#c4dfef" />
+  <link rel="icon" href="data:," />
+
+  <!--
+    LINK PREVIEW (WhatsApp, iMessage, Telegram, Slack, Facebook)
+    -----------------------------------------------------------
+    Without these the invitation shares as a bare URL: link crawlers do not run JS, and
+    everything a guest reads here — the couple's names included — is typeset at runtime
+    by js/fx/text.js over the artwork. There is no text and no image in the served HTML
+    for a crawler to find, so it has nothing to build a card from.
+
+    og:image is assets/og-cover.jpg — the cover scene (the couple walking towards the
+    Taj Mahal under their names, dates and venue) photographed at 1080x1920 by
+    tools/make_og.mjs. It is GENERATED: re-run that script after any change to
+    data/textspec.json, the cover art or the cover layout.
+
+    Bump the ?v= token below on any change — WhatsApp and Facebook cache a scraped card
+    by image URL and will otherwise serve the stale one for days.
+
+    Portrait cards do render full-height on WhatsApp (device-checked on a previous
+    invitation at 1080x1920), so the whole crop shows. og:title and og:description still
+    carry the who / when / where in words, for clients that show less of the image.
+
+    Absolute URLs are mandatory — a crawler resolves og:image against nothing.
+    Keep the file under ~300KB: past that WhatsApp silently shows no image at all.
+  -->
+  <meta name="description" content="Dr. Nandini &amp; Dr. Shubham — wedding celebrations, 10–12 December 2026, Salasar, Rajasthan." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Wedding Invitation" />
+  <meta property="og:title" content="Dr. Nandini &amp; Dr. Shubham" />
+  <meta property="og:description" content="10–12 December 2026 · Panchkula Bhawan, Salasar, Rajasthan." />
+  <meta property="og:url" content="https://deepesh-bhavna.pages.dev/" />
+  <meta property="og:image" content="https://deepesh-bhavna.pages.dev/assets/og-cover.jpg?v=1" />
+  <meta property="og:image:secure_url" content="https://deepesh-bhavna.pages.dev/assets/og-cover.jpg?v=1" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1080" />
+  <meta property="og:image:height" content="1920" />
+  <meta property="og:image:alt" content="Wedding invitation cover for Dr. Nandini and Dr. Shubham, Salasar, December 2026." />
+  <meta property="og:locale" content="en_IN" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dr. Nandini &amp; Dr. Shubham" />
+  <meta name="twitter:description" content="10–12 December 2026 · Panchkula Bhawan, Salasar, Rajasthan." />
+  <meta name="twitter:image" content="https://deepesh-bhavna.pages.dev/assets/og-cover.jpg?v=1" />
+  <meta name="twitter:image:alt" content="Wedding invitation cover for Dr. Nandini and Dr. Shubham, Salasar, December 2026." />
+
+  <script>
+    /* The curtain intro's gate, set BEFORE any stylesheet resolves so css/intro.css is
+       holding the cover scene's entry cascade on the very first frame. js/intro.js
+       drops it at the start of the exit fade; js/main.js drops it as a failsafe if
+       js/intro.js never loaded. Only this line ever sets it, so a no-JS visitor is
+       never gated (and never sees the overlay — see the <noscript> below). */
+    document.documentElement.classList.add("intro-active");
+    window.MS = window.MS || {};
+  </script>
+
+  <!--
+    STAGE ENGINE SHELL
+    ------------------
+    Paged (NOT scrolling) invitation. One fullscreen illustrated scene at a time; the
+    guest performs a scene-specific interaction to advance. Everything below the three
+    mount points is built by js/stage.js + js/nav.js from data/scenes.json + data/template.json.
+
+    Cache token: bump ?v= on every css/js edit (CDN + browsers cache aggressively).
+  -->
+
+  <!-- The four faces this invitation is set in. Preloaded (crossorigin is required
+       even same-origin, or the preload is not reused) so the first scene's copy never
+       paints in a fallback face — js/fx/text.js also waits on document.fonts. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/rungkut-400.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-600.woff2?v=2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/cormorant-garamond-400.woff2?v=2" />
+  <link rel="preload" as="image" href="assets/scenes/opening/ganesh-bal.png" />
+  <link rel="preload" as="image" href="assets/scenes/opening/NS-logo.png?v=2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/hello-bride-400.woff2" />
+
+  <!-- The opening scene's first frame. Preloaded so the closed curtain is decoding
+       alongside the render-blocking CSS and paints the moment the page can paint at
+       all. The 0.84MB clip itself is preload="auto" on its own element; the 3.4MB
+       music track is not fetched until the guest actually taps (js/audio.js). -->
+  <link rel="preload" as="image" href="assets/intro/curtain-poster.webp?v=1" fetchpriority="high" />
+  <link rel="stylesheet" href="css/base.css?v=1" />
+  <link rel="stylesheet" href="css/fonts.css?v=2" />
+  <link rel="stylesheet" href="css/stage.css?v=5" />
+  <link rel="stylesheet" href="css/scenes.css?v=30" />
+  <link rel="stylesheet" href="css/nav.css?v=3" />
+  <!-- last: its gate rules override the entry cascade in css/stage.css -->
+  <link rel="stylesheet" href="css/intro.css?v=10" />
+  <link rel="stylesheet" href="css/ns-venue.css?v=11" />
+
+  <!-- classic + defer, ordered BEFORE the module below: deferred classic scripts and
+       module scripts share one execution list in document order, so intro.js is always
+       running (and has set MS.introAlive) before main.js's failsafe looks for it. -->
+  <script defer src="js/intro.js?v=13"></script>
+  <script type="module" src="js/main.js?v=28"></script>
+
+  <noscript>
+    <style>
+      /* The overlay is static markup and js/intro.js is the only thing that can take
+         it down — without JS it would seal the invitation shut. */
+      .ms-intro { display: none !important; }
+    </style>
+  </noscript>
+</head>
+<body>
+  <!-- stage mount: the fixed, non-scrolling experience surface -->
+  <div class="stage" data-stage>
+    <!-- desktop-only page backdrop: current scene's base image, blurred + dimmed -->
+    <div class="stage__backdrop" data-stage-backdrop aria-hidden="true">
+      <div class="backdrop__layer" data-backdrop-layer></div>
+      <div class="backdrop__layer" data-backdrop-layer></div>
+    </div>
+
+    <!-- the device column. On phones it is the whole viewport; on desktop a rounded 9:19.5 stage. -->
+    <div class="stage__device" data-stage-device>
+      <!-- scenes mount -->
+      <div class="stage__viewport" data-stage-viewport></div>
+      <!-- nav mount: dots rail + back/next chevrons + mute -->
+      <div class="nav-layer" data-nav-mount></div>
+
+      <!--
+        CURTAIN INTRO — the opening scene, ahead of the invitation.
+        Static markup, not built by JS, so the closed-curtain poster paints without
+        waiting for a module graph. Inside the device column on purpose: it inherits
+        the exact box (and the rounded corners on desktop) of the scenes it hands off
+        to. js/intro.js owns the lifecycle and removes this node after the dissolve;
+        css/intro.css paints it. Hint copy: data/template.json `hints.intro`.
+      -->
+      <div class="ms-intro ms-intro--ganesh" data-intro role="button" tabindex="0"
+           aria-label="Tap the curtain to open the invitation">
+        <video class="ms-intro__video" data-intro-video
+               muted playsinline webkit-playsinline preload="auto"
+               disablepictureinpicture disableremoteplayback
+               poster="assets/intro/curtain-poster.webp?v=1" aria-hidden="true">
+          <source src="assets/intro/curtain.mp4?v=4" type="video/mp4" />
+        </video>
+        <img class="ms-intro__poster" data-intro-poster
+             src="assets/intro/curtain-poster.webp?v=1" alt=""
+             decoding="async" fetchpriority="high" draggable="false" />
+        <div class="ms-intro__blessing" aria-hidden="false">
+          <div class="ms-intro__blessing-inner">
+            <img class="ms-intro__ganesh" src="assets/scenes/opening/ganesh-bal.png"
+                 width="160" height="203" alt="Lord Ganesha" decoding="async" draggable="false" />
+          </div>
+        </div>
+        <div class="ms-intro__hint" data-intro-hint aria-hidden="true">
+          <span class="ms-intro__mark"><span class="ms-intro__core"></span></span>
+          <p class="ms-intro__chip" data-intro-chip></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- audio mount: js/audio.js creates the <audio> lazily inside the first user gesture -->
+  <div class="audio-mount" data-audio-mount hidden></div>
+</body>
+</html>

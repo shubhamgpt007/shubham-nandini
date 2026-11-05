@@ -1,0 +1,288 @@
+/* stage.css — the paged stage: device column, scene frames, design-space layers,
+ * default entry cascade, desktop phone-stage + backdrop.
+ *
+ * GEOMETRY CONTRACT (js/stage.js owns the numbers, CSS owns the painting):
+ *   --stage-h            real viewport height in px (visualViewport-measured, no bar jump)
+ *   --device-w/--device-h  the device column's box (desktop mode only)
+ *   per scene: --fx / --fy / --fs   translate + uniform scale of its 1080x1920 frame
+ *   per layer: --x / --y / --w / --h / --z   design-space rect
+ *
+ * Layers are PLACED with left/top/width/height (never animated) so `transform` stays
+ * free for motion. Only transform / opacity / filter are ever animated.
+ */
+
+/* ---------------------------------------------------------------- stage */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  height: var(--stage-h, 100svh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--page-bg);
+  isolation: isolate;
+}
+
+/* ------------------------------------------------------- iOS touch guards */
+/* A stationary long-press on iOS Safari raises the system callout / magnifier and then
+   CANCELS the pointer stream — which kills a press-and-hold gesture outright. That was
+   a real-device failure on the wedding scene, and the callout suppression below is the
+   piece that was missing: css/base.css already clears selection and the tap highlight
+   on <body> (and the drag on <img>), but nothing ever said -webkit-touch-callout.
+   Repeated across the whole stage subtree because the callout is raised from whatever
+   element the finger is actually over — a scene's art, not just its hit target. */
+.stage,
+.stage * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The stage is a fixed, paged surface that never scrolls, so nothing inside it needs
+   the UA's double-tap-zoom wait. Every scene advances on a single tap, so this is now
+   the whole story — no scene sheet narrows it further. It stays the floor, not the
+   ceiling: touch-action intersects down the tree, so a future gesture that needs the
+   raw stream can still claim `none` on its own surface. */
+.stage__device {
+  touch-action: manipulation;
+}
+
+/* ------------------------------------------------------------- backdrop */
+/* Desktop only: two crossfading layers holding the current scene's base image,
+   blurred + scaled + dimmed. Hidden (and never painted) on phones. */
+
+.stage__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: none;
+  overflow: clip;
+  background: var(--page-bg);
+}
+
+.stage.is-desktop .stage__backdrop {
+  display: block;
+}
+
+.backdrop__layer {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.15);
+  filter: blur(40px) brightness(0.65); /* 35% dim */
+  transition: opacity var(--dur-backdrop) var(--ease-soft);
+}
+
+.backdrop__layer.is-on {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------- device */
+
+.stage__device {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  /* `clip`, not `hidden`: `hidden` would turn this into a scroll container and can
+     silently freeze view()/scroll-driven timelines inside scenes. */
+  overflow: clip;
+  background: var(--stage-void);
+}
+
+.stage.is-desktop .stage__device {
+  width: var(--device-w, 390px);
+  height: var(--device-h, 846px);
+  border-radius: 28px;
+  box-shadow:
+    0 2px 6px rgba(26, 23, 18, 0.5),
+    0 30px 70px -20px rgba(26, 23, 18, 0.75),
+    0 0 0 1px rgba(232, 210, 162, 0.22),
+    0 0 90px -30px rgba(201, 163, 92, 0.35);
+}
+
+.stage__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}
+
+/* ---------------------------------------------------------------- scene */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  display: none;
+  /* the transition unit: drivers animate opacity/transform/filter on THIS element,
+     never on .scene__frame (whose transform carries the layout). */
+  transform-origin: 50% 50%;
+  background: var(--scene-bg, var(--stage-void));
+}
+
+/* mounted = participating in the current view (active, or mid-transition) */
+.scene.is-mounted {
+  display: block;
+}
+
+/* Non-live scenes must not paint or run animations. Belt and braces on top of
+   display:none, because a scene can be mounted-but-leaving during a transition. */
+.scene:not(.is-live) .layer,
+.scene:not(.is-live) .layer::before,
+.scene:not(.is-live) .layer::after {
+  animation-play-state: paused;
+}
+
+/* void filler: only enabled when a scene's bleed art cannot cover the extra vertical
+   space (very squat art on a very tall screen). Reuses the already-decoded base image
+   so the bands above/below the frame are never empty. Costs nothing when unset. */
+.scene__bleed {
+  position: absolute;
+  inset: -6%;
+  z-index: 0;
+  display: none;
+  object-fit: cover;
+  width: 112%;
+  height: 112%;
+  filter: blur(28px);
+  opacity: 0.9;
+}
+
+.scene.has-void .scene__bleed {
+  display: block;
+}
+
+/* ---------------------------------------------------------------- frame */
+
+.scene__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 1080px;
+  height: 1920px;
+  transform-origin: 0 0;
+  transform: translate3d(var(--fx, 0px), var(--fy, 0px), 0) scale(var(--fs, 1));
+  backface-visibility: hidden;
+}
+
+/* --------------------------------------------------------------- layers */
+
+.layer {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: var(--z, 1);
+  width: var(--w, 1080px);
+  height: var(--h, 1920px);
+  pointer-events: none;
+}
+
+.layer--underlay {
+  z-index: 0;
+}
+
+.layer--base {
+  z-index: 1;
+}
+
+/* an image that 404'd is removed from the paint tree; the scene's placeholder
+   gradient (css/scenes.css) shows through instead of a broken-image glyph. */
+.layer.is-missing {
+  display: none;
+}
+
+/* Scene modules opt individual layers into pointer input by role. */
+.layer[data-role="interactive"] {
+  pointer-events: auto;
+}
+
+/* ------------------------------------------------------- entry cascade */
+/* Engine default: underlay -> base -> layers, fade + rise, 600ms end-to-end.
+   js/stage.js writes --enter-delay per element. A scene module can opt out with
+   `defaultEntry: false` in its registration and animate in enter() instead. */
+
+/* NO will-change HERE. This selector matches EVERY layer of the arriving scene at once
+   — up to forty on the busiest scenes — and will-change asks the compositor to pin a
+   backing store for each of them, for the whole 600ms window, whether or not that
+   layer's own 380ms slot is running yet. The `ms-settle` animation below is pure
+   transform/opacity, which the compositor promotes on its own for exactly as long as
+   each layer is actually moving, and releases the moment it is not. */
+.scene.is-entering .layer,
+.scene.is-entering .scene-text {
+  animation: ms-settle 380ms var(--ease-out) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+.scene.is-entering .scene__bleed {
+  animation: ms-fade 380ms var(--ease-out) both;
+}
+
+@keyframes ms-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--rise), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ms-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
+/* NOTHING PINNED ON A SCENE. `.is-transitioning` is set on BOTH scenes for the length
+   of a transition, so this rule used to pin two full-viewport surfaces at device
+   resolution — and `will-change: filter` asks for a filter buffer on top of that, for
+   a property no driver animates any more (see js/stage.js). Drivers animate transform
+   and opacity with the Web Animations API, which the compositor promotes by itself and
+   releases the instant the animation is cancelled. `.is-transitioning` is still set by
+   js/stage.js and is still the flag the engine reads — it just carries no style. */
+
+/* ----------------------------------------------------------- text slots */
+/* DEAD as of the live-text phase, kept only so js/stage.js's buildTextSlots still has
+   somewhere to land. The invitation copy is NOT built here any more: js/fx/text.js
+   creates the .scene-text overlay itself, sized to the full 1080x1920 frame, and
+   typesets every block from data/textspec.json — see css/fx/text.css, which overrides
+   the box rules below via `.scene-text.ms-text`. data/template.json no longer carries
+   `text` or `zones`, so nothing reaches the `.slot` rules.
+   TODO(production): drop buildTextSlots, ctx.text() and the two rules below together
+   the next time the engine is opened for edit. */
+
+.scene-text {
+  position: absolute;
+  left: var(--tx, 8%);
+  top: var(--ty, 8%);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: var(--tw, 84%);
+  height: var(--th, auto);
+  align-items: var(--talign, center);
+  justify-content: var(--tvalign, flex-start);
+  text-align: center;
+  pointer-events: none;
+}
+
+.scene-text[hidden] {
+  display: none;
+}
+
+.slot {
+  margin: 0;
+}
+
+.slot[hidden] {
+  display: none;
+}

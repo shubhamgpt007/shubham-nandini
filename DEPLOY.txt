@@ -1,0 +1,17 @@
+Nandini & Shubham wedding invitation — static deploy bundle
+============================================================
+
+Upload EVERYTHING in this folder to your web server's document root
+(so index.html is served at https://your-domain/ ).
+
+Requirements:
+  - Static file hosting only (no PHP/Node required at runtime)
+  - HTTPS recommended (autoplay / secure context)
+  - Serve .woff2, .webp, .mp3, .mp4 with correct MIME types
+
+Quick checks after upload:
+  - Open / and tap the curtain intro
+  - Hard-refresh once if you replaced an older deploy (?v= cache bust on assets)
+
+Regenerate this bundle from the repo:
+  cd marriage-project-deepesh && python3 scripts/build_deploy.py

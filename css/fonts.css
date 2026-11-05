@@ -1,0 +1,101 @@
+/* fonts.css — the three type families this invite is set in.
+ *
+ * Source files are the client's own supplied TTFs (~/Downloads/Muskan/Muskan Fonts).
+ * They are subset to the 66 characters this invitation actually uses and shipped as
+ * woff2 only; see FONTS.md for the exact pyftsubset command, the charset and the
+ * licence notes. Nothing here is fetched from a CDN — every face is self-hosted.
+ *
+ * PSD font name              ->  CSS family              weight
+ * ---------------------------------------------------------------------------
+ * Rungkut                    ->  "Rungkut"               400
+ * CormorantGaramond-Regular  ->  "Cormorant Garamond"    400
+ * CormorantGaramond-SemiBold ->  "Cormorant Garamond"    600
+ * CormorantGaramond-Medium   ->  "Cormorant Garamond"    400   (substituted)
+ * HelloBrideScript-Regular   ->  "Hello Bride"           400
+ *
+ * TODO(production): CormorantGaramond-Medium was NOT supplied by the client. It is
+ * used by exactly one layer — the RSVP family line on the last slide, "SINGHI FAMILY"
+ * on this build — and is mapped onto the supplied Regular (400). Evidence, measured at
+ * the spec's 83.33px against the sibling's qa/textref/last.jpg (which shows that layer
+ * as "HARI FAMILY"): the reference has a median stem width of 6.0px;
+ * Regular renders 6.0px (+0%), SemiBold 9.0px (+50%). Ink coverage: reference .193,
+ * Regular .221, SemiBold .281. Ink width vs the 517px PSD bbox: Regular 514 (-0.6%),
+ * SemiBold 521 (+0.8%). Regular wins on every measure. Ask the client for the real
+ * Medium file before final delivery — a true Medium sits between the two.
+ *
+ * TODO(production): licence confirmation is the client's responsibility. Cormorant
+ * Garamond carries the SIL OFL (fsType 0, embedding permitted). Rungkut ships
+ * fsType 8 (editable embedding) and Hello Bride Script fsType 4 (preview & print
+ * only) with no embedded licence text — get written web-embedding clearance for
+ * both before this goes live. See FONTS.md.
+ *
+ * Two traps this file cannot enforce, so they are recorded in data/textspec.json:
+ *  - Rungkut's LOWERCASE slots contain small-cap letterforms. "Muskan" renders as a
+ *    swashed M + small caps. Never text-transform:uppercase a Rungkut string.
+ *  - Several Cormorant blocks are All Caps in the PSD ("Singhi Family" -> SINGHI FAMILY,
+ *    "November, 2026" -> NOVEMBER, 2026). Keep the source casing in the markup and
+ *    apply textTransform from the spec — AND font-feature-settings:"case". Cormorant
+ *    Garamond's default figures are old-style; `case` is what produces the tall
+ *    lining figures the client artwork shows. text-transform alone does not.
+ *
+ * Vertical metrics (needed to place baselines — the spec positions by baseline):
+ *   Rungkut             unitsPerEm 520   hhea asc  800 / desc -200  cap 700
+ *   Cormorant Garamond  unitsPerEm 1000  hhea asc  924 / desc -287  cap 625
+ *   Hello Bride         unitsPerEm 1000  hhea asc  750 / desc -250  cap 700
+ * Rungkut's 520 unitsPerEm makes its default line box ~1.92em tall — always set an
+ * explicit line-height from the spec's lineHeightPx rather than leaning on `normal`.
+ */
+
+@font-face {
+  font-family: "Rungkut";
+  src: url("../assets/fonts/rungkut-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("../assets/fonts/cormorant-garamond-400.woff2?v=2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("../assets/fonts/cormorant-garamond-600.woff2?v=2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hello Bride";
+  src: url("../assets/fonts/hello-bride-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* cormorant-garamond-*.woff2?v=2: re-subset 2026-09-22 with q/Q/z/Z added (see
+   tools/apply_overrides.py EXTRA_GLYPHS). Bump the token again on any re-subset, and
+   keep it identical on index.html's <link rel="preload">, or the file downloads twice. */
+
+/* Tiro Devanagari Sanskrit (SIL OFL 1.1, assets/fonts/OFL-tiro-devanagari-sanskrit.txt):
+   the names slide's Vakratunda shloka only, which replaced "|| Om Shri Ganeshaya
+   Namah ||" on 2026-09-22 (tools/apply_overrides.py). Subset to exactly that shloka's
+   characters, so any new Devanagari copy needs the file re-fetched. */
+@font-face {
+  font-family: "Tiro Devanagari Sanskrit";
+  src: url("../assets/fonts/tiro-devanagari-sanskrit-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Rungkut", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-script: "Hello Bride", "Snell Roundhand", "Brush Script MT", cursive;
+}

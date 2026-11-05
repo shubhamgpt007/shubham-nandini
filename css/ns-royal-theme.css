@@ -1,0 +1,118 @@
+/* Rajasthani overlays on event slides (cover matches deepesh-bhavna.pages.dev). */
+
+.ns-event-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 600;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Event backdrop washes (over base art until custom assets ship). */
+.scene[data-scene="mehndi"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(128, 0, 32, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(212, 160, 74, 0.28) 0%, transparent 40%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath fill='none' stroke='%238b4513' stroke-width='0.6' opacity='0.25' d='M40 8c8 12 8 20 0 32-8-12-8-20 0-32z'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+.scene[data-scene="mangal-rasmein"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    linear-gradient(160deg, rgba(255, 240, 220, 0.5) 0%, rgba(180, 60, 80, 0.25) 100%),
+    radial-gradient(circle at 50% 20%, rgba(255, 215, 0, 0.2) 0%, transparent 50%);
+}
+
+.scene[data-scene="sangeet"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(5, 19, 51, 0.75) 0%, rgba(180, 50, 90, 0.45) 100%),
+    repeating-conic-gradient(from 0deg at 50% 80%, rgba(255, 200, 80, 0.08) 0deg 15deg, transparent 15deg 30deg);
+}
+
+.scene[data-scene="mayra"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 60%, rgba(255, 182, 193, 0.45) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(237, 225, 214, 0.4) 0%, rgba(180, 100, 120, 0.25) 100%);
+}
+
+.scene[data-scene="haldi-flower"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.55) 0%, transparent 45%),
+    radial-gradient(circle at 70% 60%, rgba(255, 165, 0, 0.4) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(255, 248, 220, 0.35) 0%, rgba(255, 200, 50, 0.2) 100%);
+}
+
+.scene[data-scene="varmala"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 30%, rgba(255, 223, 180, 0.5) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(212, 175, 55, 0.25) 0%, rgba(80, 20, 40, 0.35) 100%);
+}
+
+.scene[data-scene="phere"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 70%, rgba(255, 120, 40, 0.35) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(244, 243, 237, 0.4) 0%, rgba(120, 40, 20, 0.3) 100%);
+}
+
+.scene[data-scene="mehndi"],
+.scene[data-scene="mangal-rasmein"],
+.scene[data-scene="mayra"],
+.scene[data-scene="haldi-flower"],
+.scene[data-scene="varmala"],
+.scene[data-scene="phere"] {
+  --scene-bg: #f6ead8;
+}
+
+.scene[data-scene="sangeet"] {
+  --scene-bg: #051333;
+  --scene-ink: #fbf7ef;
+}
+
+.scene[data-scene="mehndi"] .ms-text[data-block="event-title"],
+.scene[data-scene="mangal-rasmein"] .ms-text[data-block="event-title"],
+.scene[data-scene="sangeet"] .ms-text[data-block="event-title"],
+.scene[data-scene="mayra"] .ms-text[data-block="event-title"],
+.scene[data-scene="haldi-flower"] .ms-text[data-block="event-title"],
+.scene[data-scene="varmala"] .ms-text[data-block="event-title"],
+.scene[data-scene="phere"] .ms-text[data-block="event-title"] {
+  font-weight: 700;
+}

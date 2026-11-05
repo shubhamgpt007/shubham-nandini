@@ -1,0 +1,121 @@
+/* scenes.css — the per-scene stylesheet manifest + the engine's generic scene chrome.
+ *
+ * ============================================================================
+ * MANIFEST — one file per scene, one owner per file.
+ *
+ *   slug            interaction                     module + stylesheet
+ *   --------------- ------------------------------- ----------------------------
+ *   cover           tap the couple                  js/scenes/cover.js   css/scenes/cover.css
+ *   names           tap the meadow (the breeze)     js/scenes/names.js   css/scenes/names.css
+ *   mayra-mehendi   PHASE 2                         js/scenes/mayra-mehendi.js  css/scenes/mayra-mehendi.css
+ *   cocktail        PHASE 2                         js/scenes/cocktail.js       css/scenes/cocktail.css
+ *   haldi           PHASE 2                         js/scenes/haldi.js          css/scenes/haldi.css
+ *   wedding         PHASE 2                         js/scenes/wedding.js        css/scenes/wedding.css
+ *   reception       PHASE 2                         js/scenes/reception.js      css/scenes/reception.css
+ *   last            PHASE 2                         js/scenes/last.js           css/scenes/last.css
+ *
+ * Rules for those files:
+ *   - scope every selector to `.scene[data-scene="<slug>"]`, never global
+ *   - transform / opacity / filter only; no z-index above 500 (text slots)
+ *   - lengths in DESIGN px (1080x1920) — the frame is uniformly scaled
+ *   - motion belongs in js/fx/kit.js, not in a scene stylesheet
+ *   - every module registers via kit.defineScene(slug, {...}) — see js/fx/kit.js
+ *
+ * A scene agent edits ONLY its own two files. Nothing below this manifest, and no
+ * <link> in index.html, ever has to change to bring a scene to life.
+ * ============================================================================
+ */
+
+/* @import must come first in the file. css/fx/kit.css is the shared chrome for
+   js/fx/kit.js (gesture hints + sparkle fields); it is owned by the kit, not by any
+   scene, and every scene file below may re-tint it via --fx-ink / --fx-glow. */
+@import url("fx/kit.css?v=4");
+
+/* css/fx/text.css is the shared chrome for js/fx/text.js — the live invitation copy
+   typeset over every scene from data/textspec.json. Like kit.css it is owned by the
+   fx module, not by any scene; a scene may re-time or re-shape the reveal through the
+   --ms-* tokens documented in that file, scoped to its own .scene selector. */
+@import url("fx/text.css?v=3");
+
+@import url("scenes/cover.css?v=8");
+@import url("scenes/names.css?v=7");
+@import url("scenes/haldi.css?v=4");
+@import url("scenes/cocktail.css?v=6");
+@import url("scenes/mayra-mehendi.css?v=2");
+@import url("scenes/wedding.css?v=4");
+@import url("scenes/reception.css?v=1");
+@import url("scenes/last.css?v=1");
+@import url("scenes/map.css?v=1");
+@import url("../ns-royal-theme.css?v=2");
+
+/* --------------------------------------------------- per-scene ground tint */
+/* Painted behind the artwork so a decoding base image never flashes white, and so
+   the .scene__bleed void-filler has something coherent underneath. Values sampled
+   from the slide renders. Generic engine chrome — not a scene's to own. */
+
+.scene[data-scene="cover"]         { --scene-bg: #c4dfef; --scene-ink: #3a3128; }
+.scene[data-scene="names"]         { --scene-bg: #e0eaef; --scene-ink: #3a3128; }
+.scene[data-scene="mehndi"],
+.scene[data-scene="mangal-rasmein"],
+.scene[data-scene="mayra"],
+.scene[data-scene="haldi-flower"]  { --scene-bg: #c9e5ec; --scene-ink: #3a3128; }
+.scene[data-scene="sangeet"]      { --scene-bg: #051333; --scene-ink: #fbf7ef; }
+.scene[data-scene="reception"]  { --scene-bg: #3a0710; --scene-ink: #f7e6c8; }
+.scene[data-scene="varmala"],
+.scene[data-scene="phere"]         { --scene-bg: #f4f3ed; --scene-ink: #3a3128; }
+.scene[data-scene="map"]           { --scene-bg: #ddebf2; --scene-ink: #3a3128; }
+
+/* --------------------------------------------------------- dev placeholder */
+/* Applied by js/stage.js when data/scenes.json is absent, or when a scene's base
+   art has not been exported yet. Soft two-stop wash in that scene's own palette +
+   the slug label, so the paged engine (fit maths, nav, gating) is testable with no
+   assets on disk. All of this disappears the moment real art loads. */
+
+.scene--placeholder {
+  background-image:
+    radial-gradient(120% 78% at 50% 8%, var(--ph-a, #c4dfef) 0%, transparent 68%),
+    linear-gradient(178deg, var(--ph-a, #c4dfef) 0%, var(--ph-b, #f6f1e7) 62%, var(--ph-c, #7b8b5e) 100%);
+}
+
+.scene--placeholder[data-scene="cover"]         { --ph-a: #c4dfef; --ph-b: #eae3d6; --ph-c: #8fa06a; }
+.scene--placeholder[data-scene="names"]         { --ph-a: #e0eaef; --ph-b: #eef1e6; --ph-c: #7b8b5e; }
+.scene--placeholder[data-scene="mehndi"],
+.scene--placeholder[data-scene="haldi-flower"]  { --ph-a: #c9e5ec; --ph-b: #f2e7c4; --ph-c: #8fa06a; }
+.scene--placeholder[data-scene="mangal-rasmein"],
+.scene--placeholder[data-scene="mayra"]         { --ph-a: #ede1d6; --ph-b: #e9cfd6; --ph-c: #4c5f3c; }
+.scene--placeholder[data-scene="sangeet"]       { --ph-a: #0d2a52; --ph-b: #051333; --ph-c: #c9a35c; }
+.scene--placeholder[data-scene="varmala"],
+.scene--placeholder[data-scene="phere"]         { --ph-a: #f4f3ed; --ph-b: #f0dfe0; --ph-c: #4c5f3c; }
+
+/* the 1080x1920 design frame, drawn so the fit-to-width + bleed-distribution maths
+   is visible during QA. Geometric dev chrome only — never ships past phase 2. */
+.scene--placeholder .scene__frame {
+  outline: 1px dashed rgba(58, 49, 40, 0.28);
+  outline-offset: -1px;
+}
+
+.scene--placeholder[data-scene="cocktail"] .scene__frame {
+  outline-color: rgba(232, 210, 162, 0.35);
+}
+
+.scene__dev-label {
+  position: absolute;
+  left: 0;
+  top: 860px;
+  width: 1080px;
+  margin: 0;
+  color: var(--scene-ink, #3a3128);
+  font: 400 58px/1.2 "Georgia", serif;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 0.42;
+}
+
+.scene__dev-index {
+  display: block;
+  margin-top: 26px;
+  font-size: 34px;
+  letter-spacing: 0.3em;
+  opacity: 0.7;
+}

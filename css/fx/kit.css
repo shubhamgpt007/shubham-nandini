@@ -1,0 +1,491 @@
+/* fx/kit.css — chrome for js/fx/kit.js. Shared by every scene; owned by no scene.
+ *
+ * Two things only:
+ *   .fx-hint      gesture affordance (tap / swipe-left / press-hold / rub) + its
+ *                 optional microcopy chip
+ *   .fx-sparkles  soft dot twinkles for stars, glints, gold dust
+ *
+ * Both live INSIDE .scene__frame, so every length here is DESIGN px (1080x1920) and
+ * scales with the artwork. Geometric light + type only — rings, dots, trails, a pill.
+ * Nothing here ever draws a representational shape; all artwork comes from the PSD.
+ *
+ * DESIGN px -> CSS px: x0.361 on a 390px-wide phone (390/1080), x0.398 at 430.
+ * So the tap ring below (200 design px) lands at ~72 css px, and the chip's 38 design
+ * px type at ~13.7 css px. Sizes were chosen in CSS px first and converted, because
+ * "is it visible in the hand" is a question about css px, not design px.
+ *
+ * z-order: above every .layer, below .scene-text (z 500).
+ */
+
+.fx-hint,
+.fx-sparkles {
+  --fx-ink: rgba(251, 247, 239, 0.95);
+  --fx-glow: rgba(201, 163, 92, 0.55);
+  position: absolute;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------- hint */
+
+.fx-hint {
+  /* The contrast plate. Ivory-on-watercolour is the whole legibility problem: on a
+     pale sky an ivory ring has almost no edge, so a soft ink vignette is laid under
+     the marks. Held as a whole gradient (not a colour) so the dark and light
+     variants can differ in shape as well as in tint. */
+  --fx-plate: radial-gradient(
+    closest-side,
+    rgba(46, 38, 30, 0.3) 0%,
+    rgba(46, 38, 30, 0.17) 42%,
+    rgba(46, 38, 30, 0) 76%
+  );
+  --fx-chip-bg: rgba(30, 25, 19, 0.62);
+  --fx-chip-ring: rgba(232, 210, 162, 0.46);
+  --fx-chip-ink: #fbf7ef;
+  --fx-chip-shadow: rgba(28, 23, 17, 0.34);
+
+  /* The DUCK. A finger resting on the scene steps the mark back to this opacity so it
+     is not printed on top of whatever is being touched — it does NOT take the mark
+     away. `--fx-hint-duck` is a token so a scene whose own chrome lands on the same
+     spot (wedding's hold meter) can take it further down; js/fx/kit.js owns WHEN.
+     Stepping back is quicker than coming home on purpose: the guest should never
+     notice the mark leaving, and should always notice it returning. */
+  --fx-hint-duck: 0.14;
+  --fx-hint-duck-dur: var(--dur-sm, 260ms);
+
+  left: var(--fx-x, 540px);
+  top: var(--fx-y, 960px);
+  z-index: 480;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity var(--dur-md, 400ms) var(--ease-out, ease-out);
+  scale: var(--fx-hint-scale, 1); /* `scale` not `transform` — children keep transform */
+}
+
+.fx-hint.is-on {
+  opacity: 1;
+}
+
+/* A transition reads the duration off the state it is going TO, so adding is-ducked
+   uses the short duck duration and removing it uses the full --dur-md fade back. */
+.fx-hint.is-ducked {
+  transition-duration: var(--fx-hint-duck-dur);
+}
+
+.fx-hint.is-on.is-ducked {
+  opacity: var(--fx-hint-duck);
+}
+
+.fx-hint > span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* centred with margins so `transform` stays free for motion */
+  width: var(--fx-s, 40px);
+  height: var(--fx-s, 40px);
+  margin: calc(var(--fx-s, 40px) / -2) 0 0 calc(var(--fx-s, 40px) / -2);
+  border-radius: 50%;
+  animation-delay: calc(var(--fx-i, 0) * var(--fx-step, 0ms));
+  animation-iteration-count: infinite;
+  animation-timing-function: var(--ease-soft, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+/* first child, so it paints UNDER every mark. Never animated: a breathing halo would
+   read as a second, competing rhythm. */
+.fx-hint__plate {
+  --fx-s: 320px;
+  width: var(--fx-pw, var(--fx-s));
+  height: var(--fx-ph, var(--fx-s));
+  margin: calc(var(--fx-ph, var(--fx-s)) / -2) 0 0 calc(var(--fx-pw, var(--fx-s)) / -2);
+  border-radius: 999px;
+  background: var(--fx-plate);
+}
+
+.fx-hint__ring {
+  --fx-s: 200px;
+  border: 10px solid var(--fx-ink);
+  box-shadow: 0 0 30px var(--fx-glow), inset 0 0 20px rgba(201, 163, 92, 0.3);
+}
+
+/* the core always leads: the staggered followers are the rings / trail dots */
+.fx-hint__core {
+  --fx-s: 46px;
+  background: radial-gradient(circle at 50% 42%, #fffdf7 0%, var(--fx-ink) 52%, rgba(201, 163, 92, 0.55) 100%);
+  box-shadow: 0 0 16px rgba(255, 250, 235, 0.7), 0 0 34px var(--fx-glow);
+  animation-delay: 0ms;
+}
+
+.fx-hint__trail {
+  --fx-s: 26px;
+  background: radial-gradient(circle, var(--fx-ink) 0%, rgba(201, 163, 92, 0.4) 62%, transparent 100%);
+}
+
+/* ---- tap: a double-pulse, then a rest ----
+   One 2200ms cycle carries TWO ring breaks (the second ring is simply the same
+   animation delayed by --fx-step) and two core beats inside its first second, then
+   rests. A heartbeat is noticed where an even throb is read as decoration and tuned
+   out — but the rest must stay near a second: any longer and the affordance reads as
+   absent rather than quiet. The core never fades, so something is always on the mark. */
+
+.fx-hint--tap {
+  --fx-step: 300ms;
+}
+
+.fx-hint--tap .fx-hint__ring {
+  animation-name: fx-ring-out;
+  animation-duration: 2200ms;
+}
+
+.fx-hint--tap .fx-hint__core {
+  animation-name: fx-core-beat;
+  animation-duration: 2200ms;
+}
+
+@keyframes fx-ring-out {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  6% {
+    opacity: 1;
+  }
+  32%,
+  100% {
+    opacity: 0;
+    transform: scale(1.16);
+  }
+}
+
+@keyframes fx-core-beat {
+  0% {
+    transform: scale(1);
+  }
+  4% {
+    transform: scale(1.26);
+  }
+  11% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(1.22);
+  }
+  26%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---- swipe-left: a comet gliding right-to-left ---- */
+
+.fx-hint--swipe-left {
+  --fx-step: 78ms;
+  --fx-run: 210px; /* half the travel, in design px — a 420px (152 css px) sweep */
+}
+
+.fx-hint--swipe-left .fx-hint__plate {
+  --fx-pw: 700px;
+  --fx-ph: 250px;
+}
+
+.fx-hint--swipe-left .fx-hint__core {
+  --fx-s: 42px;
+}
+
+.fx-hint--swipe-left .fx-hint__trail,
+.fx-hint--swipe-left .fx-hint__core {
+  animation-name: fx-glide-left;
+  animation-duration: 2400ms;
+  animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+/* the core leads (delay 0); each trail dot starts a beat later, so it sits further
+   back along the travel and reads as a fading tail — smaller, softer, dimmer the
+   further back it is */
+.fx-hint--swipe-left .fx-hint__trail {
+  --fx-s: calc(32px - var(--fx-i, 0) * 3px);
+  animation-delay: calc((var(--fx-i, 0) + 1) * var(--fx-step));
+  filter: blur(calc(2px + var(--fx-i, 0) * 2.5px));
+  opacity: 0;
+}
+
+@keyframes fx-glide-left {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--fx-run), 0, 0) scale(0.6);
+  }
+  12% {
+    opacity: 1;
+    transform: translate3d(calc(var(--fx-run) * 0.58), 0, 0) scale(1);
+  }
+  58% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--fx-run) * -1), 0, 0) scale(0.6);
+  }
+}
+
+/* ---- press-hold: a ring a core fills, holds, and lets go of ----
+   The release is the whole point: a fill that only ever grows reads as a loading
+   spinner. Per-keyframe easings give fill (ease-in), hold, snap-back. */
+
+.fx-hint--press-hold .fx-hint__plate {
+  --fx-s: 300px;
+}
+
+.fx-hint--press-hold .fx-hint__ring {
+  --fx-s: 176px;
+  border-width: 12px;
+  animation: none;
+  opacity: 0.95;
+}
+
+/* the second ring is the "filled" edge flash at the moment the hold lands */
+.fx-hint--press-hold .fx-hint__ring + .fx-hint__ring {
+  animation-name: fx-ring-flash;
+  animation-duration: 2600ms;
+  animation-iteration-count: infinite;
+  animation-delay: 0ms;
+  opacity: 0;
+}
+
+.fx-hint--press-hold .fx-hint__core {
+  --fx-s: 152px;
+  animation-name: fx-core-fill;
+  animation-duration: 2600ms;
+  animation-timing-function: linear; /* the shape is in the keyframes */
+  opacity: 0.8;
+}
+
+@keyframes fx-core-fill {
+  0% {
+    transform: scale(0.12);
+    animation-timing-function: cubic-bezier(0.34, 0, 0.64, 0.28);
+  }
+  54% {
+    transform: scale(0.94);
+    animation-timing-function: linear;
+  }
+  66% {
+    transform: scale(0.94);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.85, 0.4);
+  }
+  75%,
+  100% {
+    transform: scale(0.12);
+  }
+}
+
+@keyframes fx-ring-flash {
+  0%,
+  48% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  58% {
+    opacity: 0.9;
+    transform: scale(1.2);
+  }
+  74%,
+  100% {
+    opacity: 0;
+    transform: scale(1.24);
+  }
+}
+
+/* ---- rub: a dot scrubbing a circle, smearing light behind it ----
+   The lone .fx-hint__ring here is the ORBIT PATH, not a pulse: a faint circle so the
+   loop is legible even in the instant the dot is on the far side of it. */
+
+.fx-hint--rub {
+  --fx-step: 96ms;
+  --fx-r: 86px; /* orbit radius, design px */
+}
+
+.fx-hint--rub .fx-hint__ring {
+  --fx-s: calc(var(--fx-r) * 2);
+  border-width: 6px;
+  border-color: var(--fx-ink);
+  animation: none;
+  opacity: 0.55;
+  box-shadow: 0 0 18px var(--fx-glow);
+}
+
+.fx-hint--rub .fx-hint__core {
+  --fx-s: 42px;
+}
+
+.fx-hint--rub .fx-hint__trail,
+.fx-hint--rub .fx-hint__core {
+  animation-name: fx-orbit;
+  animation-duration: 1900ms;
+  animation-timing-function: linear;
+}
+
+/* core leads the orbit; each trail dot starts a beat later, so it lags behind it into
+   a soft smear rather than a string of beads */
+.fx-hint--rub .fx-hint__trail {
+  --fx-s: calc(38px - var(--fx-i, 0) * 4px);
+  animation-delay: calc((var(--fx-i, 0) + 1) * var(--fx-step));
+  animation-fill-mode: backwards;
+  filter: blur(calc(4px + var(--fx-i, 0) * 3px));
+  opacity: calc(0.62 - var(--fx-i, 0) * 0.11);
+}
+
+@keyframes fx-orbit {
+  from {
+    transform: rotate(0deg) translateX(var(--fx-r)) scale(0.92);
+  }
+  50% {
+    transform: rotate(180deg) translateX(var(--fx-r)) scale(1.08);
+  }
+  to {
+    transform: rotate(360deg) translateX(var(--fx-r)) scale(0.92);
+  }
+}
+
+/* -------------------------------------------------------------- hint chip */
+
+/* The microcopy pill. A <p>, not a <span>, so the shared `.fx-hint > span` geometry
+   never lands on it. Copy comes from data/template.json `hints`; see js/fx/kit.js.
+   `width: max-content` is load-bearing: the chip is absolutely positioned inside a
+   0x0 box, and a `width: auto` shrink-to-fit would collapse it to its longest word.
+
+   No backdrop-filter. It would suit the glass, but css/nav.css records this stage
+   silently failing to paint stacked backdrop filters at desktop widths — a denser
+   plate plus a gold hairline reads the same and cannot fail. */
+.fx-hint__chip {
+  position: absolute;
+  left: var(--fx-chip-x, 0px);
+  top: var(--fx-chip-y, 0px);
+  z-index: 2;
+  display: none;
+  width: max-content;
+  max-width: var(--fx-chip-max, 780px);
+  margin: 0;
+  padding: 19px 42px 21px;
+  border-radius: 999px;
+  background: var(--fx-chip-bg);
+  box-shadow:
+    inset 0 0 0 3px var(--fx-chip-ring),
+    0 12px 34px var(--fx-chip-shadow);
+  color: var(--fx-chip-ink);
+  font: 400 38px/1.3 "Georgia", "Times New Roman", serif;
+  font-variant: small-caps;
+  letter-spacing: 0.11em;
+  text-align: center;
+  text-indent: 0.11em; /* re-centres against the trailing letter-space */
+  text-wrap: balance;
+  transform: translate3d(-50%, calc(-50% + 14px), 0);
+  transition: transform var(--dur-md, 400ms) var(--ease-out, ease-out);
+}
+
+/* only ever shown once real copy has landed — an empty pill is worse than none */
+.fx-hint.has-label .fx-hint__chip {
+  display: block;
+}
+
+.fx-hint.is-on .fx-hint__chip {
+  transform: translate3d(-50%, -50%, 0);
+}
+
+/* ---- night scenes: the same hooks css/nav.css uses ----
+   Ink disappears into navy, so the plate flips to warm light and the chip's glass is
+   lifted off the background rather than sunk into it. */
+
+.stage.is-tone-dark .fx-hint {
+  --fx-plate: radial-gradient(
+    closest-side,
+    rgba(232, 210, 162, 0.2) 0%,
+    rgba(201, 163, 92, 0.11) 44%,
+    rgba(201, 163, 92, 0) 76%
+  );
+  --fx-chip-bg: rgba(19, 45, 88, 0.68);
+  --fx-chip-ring: rgba(232, 210, 162, 0.58);
+  --fx-chip-shadow: rgba(3, 12, 33, 0.5);
+}
+
+/* ---- reduced motion: one static frame, still a legible affordance ---- */
+
+.fx-hint.is-still > span {
+  animation: none !important;
+  opacity: 1;
+}
+
+.fx-hint.is-still .fx-hint__ring + .fx-hint__ring {
+  transform: scale(1.2);
+  opacity: 0.45;
+}
+
+/* frozen mid-fill, so the gesture still reads as "press and hold" */
+.fx-hint--press-hold.is-still .fx-hint__core {
+  transform: scale(0.62);
+  opacity: 0.8;
+}
+
+.fx-hint.is-still .fx-hint__trail {
+  opacity: calc(0.5 - var(--fx-i, 0) * 0.09);
+}
+
+/* the tail laid out along its own path instead of travelling it. Less blur and more
+   opacity than the moving version: a smear that reads at 24fps disappears when it is
+   the only frame there is. */
+.fx-hint--swipe-left.is-still .fx-hint__trail {
+  filter: blur(3px);
+  opacity: calc(0.62 - var(--fx-i, 0) * 0.1);
+  transform: translate3d(calc(var(--fx-run, 0px) * (0.45 - var(--fx-i, 0) * 0.34)), 0, 0);
+}
+
+.fx-hint--rub.is-still .fx-hint__ring {
+  opacity: 0.4;
+}
+
+.fx-hint--rub.is-still .fx-hint__trail {
+  transform: rotate(calc(var(--fx-i, 0) * -34deg - 34deg)) translateX(var(--fx-r));
+}
+
+.fx-hint--rub.is-still .fx-hint__core {
+  transform: translateX(var(--fx-r));
+}
+
+/* --------------------------------------------------------------- sparkles */
+
+.fx-sparkles {
+  left: var(--fx-x, 0px);
+  top: var(--fx-y, 0px);
+  z-index: var(--fx-z, 300);
+  width: var(--fx-w, 1080px);
+  height: var(--fx-h, 1920px);
+}
+
+.fx-sparkles__dot {
+  position: absolute;
+  left: var(--fx-dx, 50%);
+  top: var(--fx-dy, 50%);
+  width: var(--fx-size, 6px);
+  height: var(--fx-size, 6px);
+  margin: calc(var(--fx-size, 6px) / -2) 0 0 calc(var(--fx-size, 6px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--fx-color, #fff7e2) 0%, rgba(255, 247, 226, 0.35) 55%, transparent 100%);
+  opacity: 0;
+  animation: fx-twinkle var(--fx-dur, 2800ms) var(--ease-in-out, ease-in-out) var(--fx-delay, 0ms) infinite;
+}
+
+@keyframes fx-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+.fx-sparkles.is-still .fx-sparkles__dot {
+  animation: none !important;
+  opacity: 0.5;
+}

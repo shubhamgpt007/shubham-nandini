@@ -1,0 +1,381 @@
+/* intro.css — the tap-to-open CURTAIN INTRO, and the gate that holds the cover scene
+ * behind it.
+ *
+ * WHAT THIS IS
+ * The invitation's opening scene: a closed-curtain still that the guest taps, a 6.08s
+ * silent clip of the curtains parting on the couple's names, and then a long dissolve
+ * into scene 1. js/intro.js drives the lifecycle; this file only paints.
+ *
+ * WHERE IT LIVES
+ * Inside .stage__device — NOT a sibling of .stage. That is deliberate: the device
+ * column is the whole viewport on a phone and a rounded 9:19.5 stage on desktop, so
+ * the overlay inherits the exact box (and the 28px corner clip) of the scenes it hands
+ * off to. z-index 1000 clears .nav-layer (900) and every layer inside a scene (<=500).
+ *
+ * THE HANDOFF GATE (documented in full in js/intro.js)
+ *   html.intro-active   set inline in <head>, so it is in force on the first frame.
+ *                       Below, it nulls out the engine's entry cascade: the cover must
+ *                       not spend its one arrival animation behind an opaque curtain.
+ *                       js/intro.js drops the class at fade START and js/scenes/cover.js
+ *                       plays the arrival then, so the two surfaces crossfade.
+ *
+ * COLOUR
+ * --intro-bg is the curtain's own mid tone (sampled: rgb(196,203,175)). It is only
+ * ever seen in the single frame before the poster decodes — the video and poster both
+ * `object-fit: cover` the box, which never letterboxes — but a sage flash-of-nothing
+ * beats a white one.
+ *
+ * MOTION
+ * transform / opacity only, GPU-composited. The looping ring pulse lives on the mark's
+ * pseudo-elements, never on the hint wrapper, so fading the wrapper out can never turn
+ * a running keyframe into a transition (the snap gotcha).
+ */
+
+:root {
+  --intro-bg: #d0988b;      /* closed curtain mid tone (marriage-project / AR clip) */
+  --intro-ink: #fbf7ef;     /* --ivory, matching css/fx/kit.css's --fx-ink */
+  --intro-glow: rgba(201, 163, 92, 0.55); /* --fx-glow */
+  --intro-fade: 1200ms;     /* the exit dissolve; js/intro.js's removal fallback must outlast it */
+}
+
+/* --------------------------------------------------------------- overlay */
+
+.ms-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 1000; /* above .nav-layer (900) and every scene layer (<= 500) */
+  overflow: hidden;
+  background: var(--intro-bg);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  /* resting scale for the exit push-through. No keyframe animation ever runs on this
+     node, so `.is-done` can transition the transform with no keyframe -> transition snap. */
+  transform: scale(1);
+}
+
+/* N&S: Ganesha + copy over the closed curtain (poster / parting clip stay visible behind). */
+.ms-intro--ganesh {
+  background: var(--intro-bg);
+}
+
+.ms-intro__blessing {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10% 6% 24%;
+  pointer-events: none;
+  transition: opacity 520ms cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+/* Soft vignette so bold type and Ganesha read on the ivory curtain without hiding it. */
+.ms-intro--ganesh .ms-intro__blessing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 45% at 50% 42%,
+    rgba(45, 10, 14, 0.22) 0%,
+    transparent 62%
+  );
+}
+
+.ms-intro__blessing-inner {
+  position: relative;
+  text-align: center;
+}
+
+.ms-intro__ganesh {
+  display: block;
+  margin: 0 auto;
+  width: min(120px, 28vw);
+  height: auto;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4)) drop-shadow(0 2px 12px rgba(212, 160, 74, 0.45));
+  animation: ms-intro-ganesh-float 4.2s ease-in-out infinite;
+}
+
+@keyframes ms-intro-ganesh-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1.03);
+  }
+}
+
+.ms-intro.is-playing .ms-intro__blessing {
+  opacity: 0;
+}
+
+.ms-intro.is-done .ms-intro__blessing {
+  opacity: 0;
+}
+
+/* The clip and its stand-in poster share IDENTICAL box maths, so the <img> is a
+   pixel-for-pixel replacement for the video's own first frame. 9:16 art in a 9:19.5
+   box: `cover` scales by height and crops the sides, which the curtain's vertical
+   drape hides completely and which keeps the final frame's centred names centred. */
+.ms-intro__video,
+.ms-intro__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  display: block;
+  background: var(--intro-bg);
+}
+
+.ms-intro__video {
+  z-index: 1;
+}
+
+/* Chrome drops the <video>'s own `poster` the instant play() is called, but the first
+   decoded frame is not presented for ~430ms after that — long enough for the guest to
+   see a bare taupe field. This <img> stands in for that frame and js/intro.js removes
+   it the moment requestVideoFrameCallback confirms the first frame is on screen.
+   Deliberately NOT a transition: any fade would just hold a stale closed-curtain frame
+   over live moving video, so the swap must land on the same vsync, not after it. */
+.ms-intro__poster {
+  z-index: 2;
+  pointer-events: none; /* taps still reach the overlay's own handler */
+}
+
+.ms-intro__poster.is-hidden {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ hint */
+/* The same visual family as the in-scene gesture chips (css/fx/kit.css): an expanding
+   ivory ring off a gold-lit core, and an ink-glass pill ringed in gold. Hand-built
+   rather than kit.hint() because the kit draws in DESIGN px inside .scene__frame, and
+   this overlay has no design frame — every length below is the kit's design px
+   converted at the 390/1080 phone scale (x0.361) and then rounded to something sane in
+   the hand. The pill's face is Georgia, not Cormorant, for the same reason kit.css
+   uses Georgia: the shipped Cormorant is subset to the 66 characters the INVITATION
+   uses, and chrome copy is not in that set. */
+
+/* Stretched left-to-right rather than anchored at left:50% + translateX(-50%): an
+   absolutely positioned shrink-to-fit box only gets the space from its offset to the
+   containing block's edge, so a left:50% pill measures against HALF the screen and
+   wraps its copy onto two lines. The flex column does the centring instead. */
+.ms-intro__hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(13%, calc(env(safe-area-inset-bottom, 0px) + 34px));
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  pointer-events: none; /* taps fall through to the overlay's own handler */
+  transition: opacity 420ms var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1)),
+    transform 420ms var(--ease-out, cubic-bezier(0.22, 0.61, 0.36, 1));
+}
+
+.ms-intro__hint.is-on {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* the tap mark: a 16px core (kit 46 design px) under two 72px rings (kit 200 design px) */
+.ms-intro__mark {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.ms-intro__mark::before,
+.ms-intro__mark::after,
+.ms-intro__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  /* centred with margins so `transform` stays free for the pulse */
+  margin: calc(var(--ms-s) / -2) 0 0 calc(var(--ms-s) / -2);
+  width: var(--ms-s);
+  height: var(--ms-s);
+}
+
+.ms-intro__mark::before,
+.ms-intro__mark::after {
+  content: "";
+  --ms-s: 72px;
+  border: 3.5px solid var(--intro-ink);
+  box-shadow: 0 0 11px var(--intro-glow), inset 0 0 7px rgba(201, 163, 92, 0.3);
+  opacity: 0;
+  transform: scale(0.3);
+  animation: ms-intro-ring 2200ms var(--ease-soft, cubic-bezier(0.33, 1, 0.68, 1)) infinite;
+  will-change: transform, opacity;
+}
+
+/* the second ring is the same beat, 300ms behind — kit's --fx-step */
+.ms-intro__mark::after {
+  animation-delay: 300ms;
+}
+
+.ms-intro__core {
+  --ms-s: 16px;
+  background: radial-gradient(circle at 50% 42%, #fffdf7 0%, var(--intro-ink) 52%, rgba(201, 163, 92, 0.55) 100%);
+  box-shadow: 0 0 6px rgba(255, 250, 235, 0.7), 0 0 12px var(--intro-glow);
+  animation: ms-intro-core 2200ms var(--ease-soft, cubic-bezier(0.33, 1, 0.68, 1)) infinite;
+  will-change: transform;
+}
+
+/* Two ring breaks and two core beats inside the first second, then a rest — a
+   heartbeat is noticed where an even throb is tuned out. Verbatim from kit.css's
+   fx-ring-out / fx-core-beat so the two affordances read as one system. */
+@keyframes ms-intro-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  6% {
+    opacity: 1;
+  }
+  32%,
+  100% {
+    opacity: 0;
+    transform: scale(1.16);
+  }
+}
+
+@keyframes ms-intro-core {
+  0% {
+    transform: scale(1);
+  }
+  4% {
+    transform: scale(1.26);
+  }
+  11% {
+    transform: scale(1);
+  }
+  18% {
+    transform: scale(1.22);
+  }
+  26%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* the microcopy pill — data/template.json `hints.intro`, fetched by js/intro.js */
+.ms-intro__chip {
+  display: none; /* an empty pill is worse than none: shown once real copy lands */
+  /* max-content (exactly as css/fx/kit.css sizes its own chip) so the pill hugs one
+     line of copy. Without it `text-wrap: balance` splits the run over two lines even
+     though it fits: balance re-lays a shrink-to-fit box at a narrower width. */
+  width: max-content;
+  max-width: min(84%, 330px);
+  margin: 0;
+  padding: 7px 15px 8px;
+  border-radius: 999px;
+  background: rgba(30, 25, 19, 0.62);
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 210, 162, 0.46),
+    0 4px 12px rgba(28, 23, 17, 0.34);
+  color: var(--intro-ink);
+  font: 400 13.5px/1.3 "Georgia", "Times New Roman", serif;
+  font-variant: small-caps;
+  letter-spacing: 0.11em;
+  text-align: center;
+  text-indent: 0.11em; /* re-centres against the trailing letter-space */
+  text-wrap: balance;
+}
+
+.ms-intro__hint.has-label .ms-intro__chip {
+  display: block;
+}
+
+/* playback has started: the affordance retires (js/intro.js drops .is-on) */
+.ms-intro.is-playing {
+  cursor: default;
+}
+
+/* keyboard focus: an inset frame — a full-bleed outline round the stage reads badly */
+.ms-intro:focus-visible {
+  outline: 2px solid var(--gold-hi, #e8d2a2);
+  outline-offset: -8px;
+}
+
+/* -------------------------------------------------------------- exit fade */
+/* A long opacity dissolve with a barely-there push-through. The opacity curve is
+   deliberately NOT front-loaded — cubic-bezier(0.45, 0.05, 0.25, 1) holds the clip's
+   final frame in the picture across the whole 1200ms instead of dumping the fade in
+   the first 200ms — so the curtain's ivory field and the cover's sky are genuinely
+   co-present through the middle of the handoff. js/scenes/cover.js fades the artwork
+   IN over the same beat, which is what makes it a crossfade rather than a reveal.
+   1.035 is as much scale as this can take: the video's last frame and the cover's sky
+   are near-identical, and any real push would read as a jump between them. */
+.ms-intro.is-done {
+  opacity: 0;
+  transform: scale(1.035);
+  pointer-events: none;
+  transition: opacity var(--intro-fade) cubic-bezier(0.45, 0.05, 0.25, 1),
+    transform var(--intro-fade) cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+/* ------------------------------------------------------------------ gate */
+/* Held while the curtain owns the screen. js/stage.js is not ours to edit, so the
+   engine's entry cascade is nulled out here instead: the cover would otherwise spend
+   its one arrival animation behind an opaque overlay and be settled by the time the
+   guest saw it. js/scenes/cover.js plays the arrival itself on `intro:done`.
+   The class is only ever set by the inline <head> script, so a no-JS visitor (who
+   never sees the overlay either — see the <noscript> in index.html) is never gated. */
+html.intro-active .scene.is-entering .layer,
+html.intro-active .scene.is-entering .scene-text {
+  animation-name: none;
+}
+
+/* Nothing behind the curtain is reachable. js/intro.js also sets `inert` on the two
+   mounts, which is what actually takes them out of the tab order; this is the CSS half
+   for engines without inert support. */
+html.intro-active .stage__viewport,
+html.intro-active .nav-layer {
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------- reduced motion */
+/* css/base.css already collapses every duration to 0.01ms !important under this query,
+   so the pulse and the exit fade are gone on their own. What is left is to leave the
+   affordance as one legible STATIC frame rather than an invisible one. */
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-intro__ganesh {
+    animation: none;
+  }
+
+  .ms-intro__mark::before {
+    animation: none;
+    opacity: 0.5;
+    transform: scale(1);
+    will-change: auto;
+  }
+
+  .ms-intro__mark::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .ms-intro__core {
+    animation: none;
+    transform: scale(1);
+    will-change: auto;
+  }
+
+  .ms-intro.is-done {
+    transform: none;
+  }
+}

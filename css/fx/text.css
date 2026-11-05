@@ -1,0 +1,258 @@
+/* text.css — the resting geometry + reveal motion for js/fx/text.js.
+ *
+ * Owned by the text renderer, exactly as css/fx/kit.css is owned by the motion kit.
+ * No scene stylesheet may reach in here; a scene tints or re-times the reveal through
+ * the custom properties listed under TOKENS, scoped to its own .scene selector.
+ *
+ * ---------------------------------------------------------------------------
+ * GEOMETRY — every length below is DESIGN px (1080x1920).
+ *
+ *   .scene-text.ms-text      the 1080x1920 overlay, pinned to .scene__frame, so the
+ *                            frame's scale matrix carries the copy with the artwork.
+ *   .ms-b                    one PSD text layer. Boxed on its ink bbox, so the default
+ *                            transform-origin (50% 50%) is the block's optical centre.
+ *   .ms-ln                   one line, absolutely placed so its BASELINE lands on the
+ *                            spec's baselineY. line-height:0 collapses the line box to
+ *                            zero height, which makes that placement measurable and
+ *                            stable (js/fx/text.js probes it once and caches).
+ *   .ms-r                    one style run. white-space:pre on the line keeps the
+ *                            spec's leading/trailing spaces, which carry real width.
+ *   .ms-g                    one grapheme, only while a script block is revealing.
+ *                            INLINE, never inline-block: an atomic inline breaks Hello
+ *                            Bride's ligatures (measured: "Wedding Ceremony" renders
+ *                            7.7px / 1.0% wider). Plain inlines hold to 0.17px.
+ *
+ * Z-BAND: art layers run to ~z270, kit chrome (.fx-hint) sits at 480, nav at 900.
+ * Text takes 450 — above every layer, below the gesture hint and the nav rail, so a
+ * chip is never buried under a name.
+ *
+ * ---------------------------------------------------------------------------
+ * MOTION — same five rules as js/fx/kit.js. transform / opacity / filter only; the
+ * resting frame is the spec geometry exactly (no transform, no filter, no stroke on
+ * anything but the faux-bold and outlined runs); every animation is removed at the end
+ * of the cascade so document.getAnimations() returns to zero and will-change is
+ * dropped.
+ *
+ * TOKENS (override per scene, scoped to .scene[data-scene="<slug>"]):
+ *   --ms-rise / --ms-scale-from / --ms-blur      body-block reveal shape
+ *   --ms-rise-script / --ms-scale-from-script    script-block reveal shape
+ *   --ms-ink-blur                                per-grapheme ink bleed
+ *   --ms-block-ms / --ms-letter-step / --ms-letter-ms
+ *   --ms-faux-stroke / --ms-faux-stroke-script   synthetic-bold weight (see below)
+ *
+ * FAUX BOLD: Photoshop's synthetic bold, which the single-weight supplied families
+ * cannot express. -webkit-text-stroke thickens the outline but does NOT widen the
+ * advance, so js/fx/text.js also adds the 0.027em tracking the spec measured off
+ * qa/textref. Both halves are needed; neither alone matches.
+ *
+ * OUTLINE: a layer's own Photoshop Stroke effect (spec `block.outline`), carried in as
+ * --ms-outline by js/fx/text.js. Same mechanism, different provenance — synthetic bold
+ * is a calibration this file owns, an outline is the designer's drawing and belongs to
+ * the spec. See OUTLINE WEIGHT below.
+ */
+
+.scene-text.ms-text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 450;
+  display: block;
+  width: 1080px;
+  height: 1920px;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  text-align: left;
+  pointer-events: none;
+
+  /* reveal shape */
+  --ms-rise: 13px;
+  --ms-scale-from: 0.982;
+  --ms-blur: 6px;
+  --ms-rise-script: 10px;
+  --ms-scale-from-script: 0.99;
+  --ms-ink-blur: 9px;
+  --ms-block-ms: 780ms;
+  --ms-letter-step: 38ms;
+  --ms-letter-ms: 560ms;
+  --ms-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Synthetic bold, per face, measured against the client's flattened finals
+     (~/Downloads/Muskan/*.jpg — 1080x1920, i.e. 1:1 with this design space).
+     Metric: thresholded INK AREA and the distribution of horizontal stroke widths
+     inside each block's spec bbox, render over reference. Stroke widths are what a
+     reader sees as weight, and unlike total ink they do not move with antialiasing.
+       Cormorant Garamond  0.019em, calibrated against the face's own plain blocks.
+       Rungkut             0.007em. RE-MEASURED 2026-09-04 against Names.jpg and
+                           Last Slide.jpg after the client called the names light, and
+                           it is right — at 0.007em names/bride-name renders 0.994 of
+                           the reference's ink with an identical stroke-width spread
+                           (p20/p50/p80 2/5/6 px vs 2/5/6), groom-name 1.057 and
+                           last/rsvp 1.079. EVERY heavier value overshoots: 0.010em
+                           takes those to 1.047 / 1.120 / 1.124. Do not raise it.
+                           What actually made the cover's names light was a dropped
+                           PSD Stroke effect, not this constant — see OUTLINE WEIGHT.
+     Only Rungkut carries faux-bold runs in this spec, so the script value is measured
+     on Rungkut alone; re-measure if a Hello Bride layer ever turns faux bold on. */
+  --ms-faux-stroke: 0.019em;
+  --ms-faux-stroke-script: 0.007em;
+}
+
+/* ---------------------------------------------------------------- blocks */
+
+.ms-text .ms-b {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  opacity: 0; /* armed — the reveal owns the way in */
+  font-weight: 400;
+}
+
+.ms-text .ms-ln {
+  position: absolute;
+  line-height: 0;
+  white-space: pre;
+}
+
+.ms-text .ms-ln--center {
+  transform: translateX(-50%);
+}
+
+.ms-text .ms-ln--right {
+  transform: translateX(-100%);
+}
+
+.ms-text .ms-r,
+.ms-text .ms-g {
+  line-height: 0;
+  font-kerning: normal;
+}
+
+/* zero-size inline-block whose baseline is its own top edge: the probe js/fx/text.js
+   measures a line's baseline offset with. Never present at rest. */
+.ms-text .ms-bl {
+  display: inline-block;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  vertical-align: baseline;
+}
+
+/* OUTLINE WEIGHT. Two things thicken a glyph without moving its advance, and they are
+   not the same kind of thing:
+     --ms-fb       SYNTHETIC bold, a per-face calibration constant (below), standing in
+                   for a weight the single-weight supplied families do not ship.
+     --ms-outline  the layer's OWN Photoshop Stroke effect, authored data, written per
+                   run in design px by js/fx/text.js from the spec's block.outline.
+   Photoshop stacks them, so the widths add. No layer in this spec is both, so the sum
+   is only ever one term today.
+
+   Only these two classes carry the declaration: a 0-width stroke would be a no-op, but
+   not writing one at all keeps every unstyled block's rasterisation provably
+   untouched. */
+
+.ms-text .ms-r--fb,
+.ms-text .ms-r--outline {
+  -webkit-text-stroke: calc(var(--ms-outline, 0px) + var(--ms-fb, 0px))
+    var(--ms-outline-color, currentColor);
+}
+
+.ms-text .ms-r--fb {
+  --ms-fb: var(--ms-faux-stroke);
+}
+
+.ms-text .ms-r--fb.ms-r--script {
+  --ms-fb: var(--ms-faux-stroke-script);
+}
+
+.ms-text .ms-r--noliga {
+  font-variant-ligatures: none;
+}
+
+/* --------------------------------------------------------------- reveal */
+
+/* No will-change: every block of the page is `is-revealing` at once, so this pinned a
+   surface (and a FILTER surface) per block for the whole cascade, including the blocks
+   still sitting in their `--d` delay. The animation below promotes each block on its
+   own, for exactly as long as it runs. */
+.ms-text.is-revealing .ms-b {
+  animation: ms-b-in var(--ms-block-ms) var(--ms-ease) var(--d, 0ms) both;
+}
+
+/* script blocks keep their own opacity: the graphemes carry the ink in */
+.ms-text.is-revealing .ms-b--script {
+  animation-name: ms-b-rise;
+}
+
+.ms-text.is-revealing .ms-g {
+  animation: ms-g-in var(--ms-letter-ms) var(--ms-ease)
+    calc(var(--d, 0ms) + var(--i, 0) * var(--ms-letter-step)) both;
+}
+
+/* settled: the spec geometry, nothing animating, nothing pinned to a layer */
+.ms-text.is-revealed .ms-b {
+  opacity: 1;
+}
+
+@keyframes ms-b-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--ms-rise), 0) scale(var(--ms-scale-from));
+    filter: blur(var(--ms-blur));
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes ms-b-rise {
+  from {
+    opacity: 1;
+    transform: translate3d(0, var(--ms-rise-script), 0) scale(var(--ms-scale-from-script));
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* ink bleeding into the paper, letter after letter, in writing order */
+@keyframes ms-g-in {
+  from {
+    opacity: 0;
+    filter: blur(var(--ms-ink-blur));
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes ms-b-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ----------------------------------------------------- reduced motion */
+/* One opacity fade for the whole page of copy: no rise, no scale, no blur, no
+   per-letter stagger. js/fx/text.js also skips the grapheme split entirely, so the
+   rule below is belt-and-braces for a preference that flips mid-scene. */
+
+@media (prefers-reduced-motion: reduce) {
+  .ms-text.is-revealing .ms-b,
+  .ms-text.is-revealing .ms-b--script {
+    animation: ms-b-fade 420ms linear 0ms both;
+  }
+
+  .ms-text.is-revealing .ms-g {
+    animation: none;
+    opacity: 1;
+    filter: none;
+  }
+}

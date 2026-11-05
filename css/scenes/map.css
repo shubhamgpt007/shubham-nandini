@@ -1,0 +1,230 @@
+/* map.css — scene 8 of 8. Owned by js/scenes/map.js.
+ *
+ * Everything is scoped to .scene[data-scene="map"]. Card and button lengths are DESIGN
+ * px (1080x1920) so they ride the frame's fit with the copy; the replay control is
+ * device px, like the nav chrome it sits beside.
+ */
+
+/* -------------------------------------------------------------------- card */
+/* An ivory mount with a gold hairline, like a photo set into the invitation. */
+.scene[data-scene="map"] .mp-card {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 450;
+  box-sizing: border-box;
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  margin: 0;
+  padding: 12px;
+  border-radius: 36px;
+  background: var(--ivory, #fbf7ef);
+  box-shadow:
+    inset 0 0 0 2px rgba(196, 160, 96, 0.55),
+    0 18px 44px rgba(67, 69, 14, 0.18),
+    0 3px 10px rgba(67, 69, 14, 0.12);
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--dur-lg, 700ms) var(--ease-out, ease-out),
+    transform var(--dur-lg, 700ms) var(--ease-out, ease-out);
+}
+
+.scene[data-scene="map"] .mp-card.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.scene[data-scene="map"] .mp-card__well {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 26px;
+  background: #e9e4d6; /* what shows while Google's tiles arrive */
+}
+
+/* The frame is uniformly scaled by --fs (js/stage.js). An iframe sized in design px
+   would lay Google's map out at its full design size in CSS px and then shrink it to a third, so the
+   labels and controls would be unreadable. Instead it is laid out at the well's
+   DEVICE size and scaled back up by 1/--fs: one scale cancels the other, and the map
+   draws at 1:1 in exactly the well. */
+.scene[data-scene="map"] .mp-card__map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* the well is the card minus its 12px padding each side */
+  width: calc((var(--w, 0px) - 24px) * var(--fs, 1));
+  height: calc((var(--h, 0px) - 24px) * var(--fs, 1));
+  border: 0;
+  transform: scale(calc(1 / var(--fs, 1)));
+  transform-origin: 0 0;
+}
+
+/* ------------------------------------------------------------------ button */
+.scene[data-scene="map"] .mp-go {
+  position: absolute;
+  left: 50%;
+  top: var(--y, 0px);
+  z-index: 455;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: var(--h, 0px);
+  padding: 0 64px 0 54px;
+  border-radius: 999px;
+  background: #b54863;
+  box-shadow:
+    inset 0 0 0 2px rgba(232, 210, 162, 0.7),
+    0 10px 26px rgba(120, 30, 55, 0.25);
+  color: var(--ivory, #fbf7ef);
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  font-size: 38px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 18px);
+  transition:
+    opacity var(--dur-lg, 700ms) var(--ease-out, ease-out) 120ms,
+    transform var(--dur-lg, 700ms) var(--ease-out, ease-out) 120ms,
+    background-color var(--dur-sm, 260ms) var(--ease-out, ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scene[data-scene="map"] .mp-go.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.scene[data-scene="map"] .mp-go:hover {
+  background: #a63350;
+}
+
+.scene[data-scene="map"] .mp-go:active {
+  transform: translate(-50%, 0) scale(0.96);
+}
+
+.scene[data-scene="map"] .mp-go:focus-visible {
+  outline: 6px solid var(--gold-hi, #e8d2a2);
+  outline-offset: 8px;
+}
+
+.scene[data-scene="map"] .mp-go svg {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+}
+
+/* ------------------------------------------------------------------ credit */
+/* "Designed by Shagun Studio India" — the studio colophon, moved here from the RSVP
+   slide. Same treatment as before: Cormorant at a colophon size, softened olive,
+   underlined because it is a link. The 28px padding grows the tap target, so `top` is
+   pulled up by it to leave the glyphs on --y. */
+.scene[data-scene="map"] .mp-credit {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--y, 0px) - 28px);
+  z-index: 455;
+  padding: 28px 34px;
+  font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 30px; /* design px -> ~11px at a 390px viewport */
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: #5d5f2c;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  opacity: 0;
+  transform: translateX(-50%) translateY(6px);
+  transition:
+    opacity var(--dur-md, 400ms) var(--ease-out, ease) 240ms,
+    transform var(--dur-md, 400ms) var(--ease-out, ease) 240ms,
+    color 160ms ease;
+}
+
+.scene[data-scene="map"] .mp-credit.is-on {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.scene[data-scene="map"] .mp-credit:hover,
+.scene[data-scene="map"] .mp-credit:focus-visible {
+  color: #43450e;
+}
+
+.scene[data-scene="map"] .mp-credit:focus-visible {
+  outline: 2px solid var(--gold-hi, #e8d2a2);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------------ replay */
+/* Moved from css/scenes/last.css with the finale; see the reasoning there. */
+.scene[data-scene="map"] .mp-replay {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--safe-b, 0px) + 74px);
+  z-index: 460;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-left: -24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(46, 36, 26, 0.52);
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 210, 162, 0.55),
+    0 4px 14px rgba(46, 36, 26, 0.3);
+  color: var(--ivory, #fbf7ef);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--dur-lg, 700ms) var(--ease-out, ease-out),
+    transform var(--dur-sm, 260ms) var(--ease-out, ease-out);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene[data-scene="map"] .mp-replay.is-on {
+  opacity: 1;
+}
+
+.scene[data-scene="map"] .mp-replay svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px rgba(28, 22, 16, 0.55));
+}
+
+.scene[data-scene="map"] .mp-replay:active {
+  transform: scale(0.92);
+}
+
+.scene[data-scene="map"] .mp-replay:focus-visible {
+  outline: 3px solid var(--gold-hi, #e8d2a2);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene[data-scene="map"] .mp-card,
+  .scene[data-scene="map"] .mp-go {
+    transition: opacity 200ms linear;
+  }
+}

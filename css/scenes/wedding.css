@@ -1,0 +1,180 @@
+/* wedding.css — scene 6 of 7. Owned by js/scenes/wedding.js.
+ *
+ * Everything is scoped to .scene[data-scene="wedding"]. All lengths are DESIGN px
+ * (1080x1920): the frame is uniformly scaled, so design px are the only unit that
+ * keeps chrome locked to the artwork on every screen.
+ *
+ * Motion lives in JS (js/fx/kit.js + the scene module). This file places the petals,
+ * the blessing chrome and the hit target, and tints the kit chrome.
+ */
+
+/* ------------------------------------------------------------------ petals */
+/* Two nested elements per petal so two motions can run at once: the wrapper takes the
+   fall (or the lift), the <img> inside takes the spin. The sprites are crops of this
+   template's own artwork — see the header of js/scenes/wedding.js for their PSD boxes. */
+
+.scene[data-scene="wedding"] .wd-petal {
+  position: absolute;
+  left: var(--x, 540px);
+  top: var(--y, 1200px);
+  z-index: 300; /* over the couple (160), under the kit's hint (480) */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene[data-scene="wedding"] .wd-petal__img {
+  display: block;
+  width: var(--w, 32px);
+  height: var(--h, 24px);
+  filter: drop-shadow(0 1px 2px rgba(84, 44, 58, 0.18));
+}
+
+/* ----------------------------------------------------------- blessing ring */
+/* The blessing's progress: a still ring that a core fills from the middle out. Geometric
+   light only — a ring, a disc, and their glow.
+ *
+ * TWO states, because the blessing is one uninterruptible run rather than a meter that
+ * outlives a gesture:
+ *
+ *   (neither)   before the tap, and after the bloom takes over — invisible, the
+ *               artwork's resting frame
+ *   .is-on      the blessing is running — full, for its 1.4s
+ *
+ * The transition carries the step in and the step back out. */
+
+.scene[data-scene="wedding"] .wd-hold {
+  position: absolute;
+  left: var(--x, 540px);
+  top: var(--y, 1236px);
+  z-index: 478; /* just under the kit's hint, which it replaces while it runs */
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity var(--dur-sm, 260ms) var(--ease-out, ease-out);
+  pointer-events: none;
+}
+
+.scene[data-scene="wedding"] .wd-hold.is-on {
+  opacity: 1;
+}
+
+.scene[data-scene="wedding"] .wd-hold > span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* centred with margins so `transform` stays free for the fill */
+  width: var(--s, 108px);
+  height: var(--s, 108px);
+  margin: calc(var(--s, 108px) / -2) 0 0 calc(var(--s, 108px) / -2);
+  border-radius: 50%;
+}
+
+.scene[data-scene="wedding"] .wd-hold__ring {
+  --s: 112px;
+  border: 4px solid rgba(255, 252, 244, 0.95);
+  box-shadow: 0 0 26px rgba(226, 190, 128, 0.6), inset 0 0 14px rgba(226, 190, 128, 0.3);
+}
+
+.scene[data-scene="wedding"] .wd-hold__fill {
+  --s: 98px;
+  background: radial-gradient(circle at 50% 42%, #fffdf7 0%, rgba(255, 246, 224, 0.95) 46%, rgba(226, 190, 128, 0.55) 100%);
+  box-shadow: 0 0 22px rgba(240, 214, 158, 0.65);
+  transform: scale(0.12); /* the resting, unfilled state */
+}
+
+/* ----------------------------------------------------------------- glow */
+/* The warmth gathering over the couple while the blessing runs. Painted under the petals
+   so they stay crisp against it. */
+
+.scene[data-scene="wedding"] .wd-glow {
+  position: absolute;
+  left: 53px;
+  top: 1160px;
+  z-index: 290;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 248, 226, 0.95) 0%, rgba(246, 226, 176, 0.5) 42%, rgba(232, 204, 150, 0) 72%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------ mirror sheen */
+/* A light streak walking across the cheval mirror's glass every eight seconds or so.
+   The wrapper is the glass rect (inset from the gilt frame) and clips the streak to it.
+   `clip`, never `hidden`: `hidden` would make this a scroll container. */
+
+.scene[data-scene="wedding"] .wd-sheen {
+  position: absolute;
+  left: var(--x, 904px);
+  top: var(--y, 1312px);
+  z-index: 75; /* over the mirror (70), under the vase in front of it (80) */
+  width: var(--w, 112px);
+  height: var(--h, 292px);
+  overflow: clip;
+  /* the glass is a tilted quadrilateral and the rose garland dips over its top corner,
+     so the band is faded out at both ends of the rect: no straight edge ever lands on
+     the artwork, only light does */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  pointer-events: none;
+}
+
+.scene[data-scene="wedding"] .wd-sheen__streak {
+  position: absolute;
+  left: 0;
+  top: -30%;
+  width: 30%;
+  height: 160%;
+  /* a narrow band with a bright core, so it reads as light crossing the glass rather
+     than as the whole reflection brightening */
+  background: linear-gradient(
+    96deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 254, 250, 0.5) 34%,
+    rgba(255, 255, 255, 0.92) 50%,
+    rgba(255, 254, 250, 0.5) 66%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0;
+}
+
+/* -------------------------------------------------------------- hit target */
+/* The couple cutout is a 337x538 rect that is mostly transparent, and the petals fall
+   from the air above them — so the tap target covers both. Invisible by design:
+   js/fx/kit.js and .wd-hold draw the only affordances the guest ever sees. */
+
+.scene[data-scene="wedding"] .wd-hit {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 470;
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  padding: 0;
+  border: 0;
+  border-radius: 60px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation; /* no 300ms double-tap-zoom wait on the signature gesture */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene[data-scene="wedding"] .wd-hit:disabled {
+  cursor: default;
+}
+
+.scene[data-scene="wedding"] .wd-hit:focus-visible {
+  outline: 4px solid var(--gold-hi, #e8d2a2);
+  outline-offset: -10px;
+}
+
+/* --------------------------------------------------------------------- hint */
+/* The tap hint sits on the pale mandap canopy, where a pure ivory ring would wash
+   out — warm the glow toward the rose of the garlands so it still reads. */
+
+.scene[data-scene="wedding"] .fx-hint {
+  --fx-ink: rgba(255, 252, 246, 0.98);
+  --fx-glow: rgba(196, 96, 118, 0.42);
+}

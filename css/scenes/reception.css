@@ -1,0 +1,338 @@
+/* reception.css — scene 5 of 6. Owned by js/scenes/reception.js.
+ *
+ * Everything is scoped to .scene[data-scene="reception"]. All lengths are DESIGN px
+ * (1080x1920) — the frame is uniformly scaled, so design px are the only unit that keeps
+ * chrome locked to the artwork on every screen.
+ *
+ * Motion lives in JS (WAAPI, see js/scenes/reception.js). This file only draws the light:
+ * glints, flares, spots, glows, floor pools and glitter — geometric light, never artwork. Every
+ * FX node rests at opacity 0, so a cancelled animation lands back on the art exactly.
+ *
+ * MEMORY: every node here is small and bounded. The biggest are ball-1's burst flash
+ * (~340 x 340) and the nearer floor pool (500 x 200). No filter at all, no will-change,
+ * no blend modes. Whole-viewport light is a flat solid-colour sheet made in JS.
+ *
+ * z-order inside the frame:
+ *   9 strand twinkles (kit) | 10/12/14 balls | 11/13/15 their rigs | 20 bulb glows |
+ *   25 drifting spots | 30 air glitter (kit) | 420 floor pools | 440 burst rays |
+ *   450 copy (.scene-text) | 465 glitter | 470 tap target | 480 hint (kit)
+ */
+
+/* ------------------------------------------------------------- ball rigs */
+/* An FX twin per ball at the ball's exact rect, swinging with it. Never takes input:
+   the balls underneath are role "interactive" and answer the tap themselves. */
+
+.scene[data-scene="reception"] .rc-rig {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: var(--z, 11);
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  pointer-events: none;
+}
+
+/* the mirror sphere: travelling light is clipped to it */
+.scene[data-scene="reception"] .rc-orb {
+  position: absolute;
+  left: var(--ox, 0px);
+  top: var(--oy, 0px);
+  width: var(--od, 0px);
+  height: var(--od, 0px);
+  border-radius: 50%;
+  overflow: hidden; /* fallback for engines without overflow: clip */
+  overflow: clip; /* `clip`, never a scroll container */
+}
+
+/* a facet catching the light: a hot white core with a rosy falloff */
+.scene[data-scene="reception"] .rc-facet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--fs, 18px);
+  height: var(--fs, 18px);
+  margin: calc(var(--fs, 18px) / -2) 0 0 calc(var(--fs, 18px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 236, 244, 0.85) 28%,
+    rgba(255, 190, 214, 0) 72%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* the broad sheen that passes across the sphere */
+.scene[data-scene="reception"] .rc-sheen {
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  width: 34%;
+  height: 120%;
+  margin-left: -17%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 240, 246, 0) 0%,
+    rgba(255, 240, 246, 0.42) 46%,
+    rgba(255, 255, 255, 0.6) 52%,
+    rgba(255, 240, 246, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* the four-point disco star. Two thin bars of light crossing on a hot core. */
+.scene[data-scene="reception"] .rc-flare {
+  position: absolute;
+  left: var(--fx, 0px);
+  top: var(--fy, 0px);
+  width: var(--fd, 60px);
+  height: var(--fd, 60px);
+  margin: calc(var(--fd, 60px) / -2) 0 0 calc(var(--fd, 60px) / -2);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 238, 246, 0.7) 9%,
+    rgba(255, 210, 228, 0) 22%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene[data-scene="reception"] .rc-flare::before,
+.scene[data-scene="reception"] .rc-flare::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 6%;
+  margin-top: -3%;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 236, 244, 0) 0%,
+    rgba(255, 250, 252, 0.95) 50%,
+    rgba(255, 236, 244, 0) 100%
+  );
+}
+
+.scene[data-scene="reception"] .rc-flare::after {
+  transform: rotate(90deg);
+}
+
+/* the burst's stars along the crystal strands: under the balls, over the base */
+.scene[data-scene="reception"] .rc-flare--strand {
+  z-index: 9;
+}
+
+/* the burst flash around a ball: a box 3r wide, unclipped, resting invisible */
+.scene[data-scene="reception"] .rc-orb-glow {
+  position: absolute;
+  left: var(--gx, 0px);
+  top: var(--gy, 0px);
+  width: var(--gd, 0px);
+  height: var(--gd, 0px);
+  margin: calc(var(--gd, 0px) / -2) 0 0 calc(var(--gd, 0px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 252, 250, 0.95) 0%,
+    rgba(255, 204, 222, 0.62) 34%,
+    rgba(255, 150, 180, 0.2) 62%,
+    rgba(255, 150, 180, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------ room light */
+
+/* a globe bulb breathing: warm halo centred on the painted globe */
+.scene[data-scene="reception"] .rc-bulb {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 20;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 246, 214, 0.95) 0%,
+    rgba(255, 214, 140, 0.55) 30%,
+    rgba(255, 180, 100, 0.16) 62%,
+    rgba(255, 180, 100, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* a reflected light spot drifting across the walls / floor */
+.scene[data-scene="reception"] .rc-spot,
+.scene[data-scene="reception"] .rc-ray {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 25;
+  width: var(--s, 18px);
+  height: var(--s, 18px);
+  margin: calc(var(--s, 18px) / -2) 0 0 calc(var(--s, 18px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--tone, 255, 246, 232), 1) 0%,
+    rgba(var(--tone, 255, 246, 232), 0.92) 22%,
+    rgba(var(--tone, 255, 246, 232), 0.45) 48%,
+    rgba(var(--tone, 255, 246, 232), 0) 74%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene[data-scene="reception"] .rc-ray {
+  z-index: 440; /* the burst sweeps over the whole room, still under the copy */
+}
+
+/* ---------------------------------------------------------------- burst */
+
+/* a spotlight pool landing on the glossy floor: a perspective ellipse of warm light */
+.scene[data-scene="reception"] .rc-pool {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 420;
+  width: var(--pw, 440px);
+  height: calc(var(--pw, 440px) * 0.4);
+  margin: calc(var(--pw, 440px) * -0.2) 0 0 calc(var(--pw, 440px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 246, 222, 0.82) 0%,
+    rgba(255, 222, 170, 0.55) 38%,
+    rgba(255, 196, 160, 0.2) 70%,
+    rgba(255, 196, 160, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* gold & rose glitter */
+.scene[data-scene="reception"] .rc-confetti {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 465;
+  background: var(--ink, #f3d27a);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene[data-scene="reception"] .rc-confetti--strip {
+  width: 13px;
+  height: 30px;
+  margin: -15px 0 0 -6.5px;
+  border-radius: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0) 45%
+  ),
+  var(--ink, #f3d27a);
+}
+
+.scene[data-scene="reception"] .rc-confetti--diamond {
+  width: 19px;
+  height: 19px;
+  margin: -9.5px 0 0 -9.5px;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.scene[data-scene="reception"] .rc-confetti--dot {
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+}
+
+/* the transition's sun: one bounded disc (box == frame width), placed in CSS px by JS
+   on the leaving .scene, above its gold sheet */
+.scene[data-scene="reception"] .rc-sun {
+  position: absolute;
+  z-index: 601;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 252, 236, 0.98) 0%,
+    rgba(255, 232, 178, 0.82) 16%,
+    rgba(255, 204, 140, 0.45) 40%,
+    rgba(255, 180, 140, 0.14) 66%,
+    rgba(255, 180, 140, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------- tap target */
+/* The stage, the arches and the dance floor. Invisible by design — js/fx/kit.js draws
+   the only affordance the guest ever sees. */
+
+.scene[data-scene="reception"] .rc-hit {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 470;
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  padding: 0;
+  border: 0;
+  border-radius: 60px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation; /* no 300ms double-tap-zoom wait on the signature gesture */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene[data-scene="reception"] .rc-hit:disabled {
+  cursor: default;
+}
+
+/* keyboard users get the same gesture; the outline is the only time this box paints */
+.scene[data-scene="reception"] .rc-hit:focus-visible {
+  outline: 4px solid var(--gold-hi, #e8d2a2);
+  outline-offset: -14px;
+}
+
+/* the balls answer a tap too */
+.scene[data-scene="reception"] [data-layer^="ball-"] {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --------------------------------------------------------------------- hint */
+/* Ivory on crimson needs no help; warm the glow to the room's gold. */
+
+.scene[data-scene="reception"] .fx-hint {
+  --fx-ink: rgba(255, 246, 232, 0.98);
+  --fx-glow: rgba(232, 190, 110, 0.62);
+}
+
+/* ------------------------------------------------------------ reduced motion */
+/* JS starts no loops and no burst under reduced motion; this is belt and braces for
+   any FX node that might still be on the page. */
+
+@media (prefers-reduced-motion: reduce) {
+  .scene[data-scene="reception"] .rc-facet,
+  .scene[data-scene="reception"] .rc-sheen,
+  .scene[data-scene="reception"] .rc-flare,
+  .scene[data-scene="reception"] .rc-spot,
+  .scene[data-scene="reception"] .rc-ray,
+  .scene[data-scene="reception"] .rc-pool,
+  .scene[data-scene="reception"] .rc-confetti {
+    display: none;
+  }
+}

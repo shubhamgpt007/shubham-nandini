@@ -1,0 +1,145 @@
+/* ---------------------------------------------------------------- venue program — compliments + map */
+.scene:is([data-scene="compliments"], [data-scene="map"]) .ns-compliments-program {
+  position: absolute;
+  left: 50%;
+  z-index: 480;
+  width: 820px;
+  max-width: 88%;
+  pointer-events: none;
+  padding: 0 8px 12px;
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene[data-scene="compliments"] .ns-compliments-program {
+  top: 168px;
+}
+
+.scene[data-scene="map"] .ns-compliments-program {
+  top: 160px;
+}
+
+.scene:is([data-scene="compliments"], [data-scene="map"]) .ns-compliments-program.is-on {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.ns-venue-block {
+  text-align: center;
+  pointer-events: none;
+  margin-bottom: 22px;
+}
+
+.ns-venue-block:last-of-type {
+  margin-bottom: 18px;
+}
+
+.ns-venue-block__heading {
+  margin: 0 0 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.ns-venue-block__heading-text {
+  display: block;
+  max-width: 100%;
+  font: 600 14px/1.15 "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #1f1f1f;
+  white-space: nowrap;
+}
+
+/* Gold rule + diamond (reference invitation) */
+.ns-venue-block__ornament {
+  display: block;
+  position: relative;
+  width: min(320px, 68%);
+  height: 8px;
+}
+
+.ns-venue-block__ornament::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180, 140, 60, 0.35) 12%,
+    rgba(212, 175, 85, 0.95) 50%,
+    rgba(180, 140, 60, 0.35) 88%,
+    transparent
+  );
+  transform: translateY(-50%);
+}
+
+.ns-venue-block__ornament::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  background: linear-gradient(135deg, #e8c872, #c9a043);
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 6px rgba(212, 175, 85, 0.45);
+}
+
+.ns-venue-block__place {
+  margin: 0 0 8px;
+  font: 400 16px/1.35 "Cormorant Garamond", Georgia, serif;
+  color: #222222;
+}
+
+.ns-venue-block__place-name {
+  font-weight: 700;
+}
+
+.ns-venue-block__link {
+  display: inline-block;
+  font: 400 14px/1.35 "Cormorant Garamond", Georgia, serif;
+  color: #1a1a1a;
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 26, 26, 0.35);
+  text-underline-offset: 5px;
+  pointer-events: auto;
+}
+
+.ns-venue-block__link:hover {
+  color: #b54863;
+  text-decoration-color: rgba(181, 72, 99, 0.5);
+}
+
+.ns-venue-block__link:focus-visible {
+  outline: 2px solid #b54863;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.ns-compliments-program__footer {
+  margin: 4px 0 0;
+  text-align: center;
+  font: italic 400 15px/1.35 "Cormorant Garamond", Georgia, serif;
+  color: #3d3d3d;
+  pointer-events: none;
+}
+
+.scene[data-scene="compliments"] .ms-text [data-block="title"] {
+  text-shadow: 0 1px 12px rgba(255, 252, 245, 0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene:is([data-scene="compliments"], [data-scene="map"]) .ns-compliments-program {
+    transition: none;
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}

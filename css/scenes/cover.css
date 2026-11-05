@@ -1,0 +1,91 @@
+/* cover.css — scene 1 of 7. Owned by js/scenes/cover.js.
+ *
+ * Everything is scoped to .scene[data-scene="cover"]. All lengths are DESIGN px
+ * (1080x1920): the frame is uniformly scaled, so design px are the only unit that
+ * keeps chrome locked to the artwork on every screen.
+ *
+ * Motion lives in JS (js/fx/kit.js). This file only places the tap target.
+ */
+
+/* ---------------------------------------------------------------- tap target */
+/* The couple cutout is a 601x715 rect that is mostly transparent, so the gesture gets
+   its own generous hit box: PSD rect + 72 design px on every side (~52 css px of slop
+   on a 390px phone, on top of the couple's own ~217 css px). Invisible by design —
+   js/fx/kit.js draws the only affordance the guest ever sees. */
+
+.scene[data-scene="cover"] .cv-hit {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 470; /* above every layer, below .scene-text (500) */
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  padding: 0;
+  border: 0;
+  border-radius: 40px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation; /* no 300ms double-tap-zoom wait on the signature gesture */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene[data-scene="cover"] .cv-hit:disabled {
+  cursor: default;
+}
+
+/* keyboard users get the same gesture; the outline is the only time this box paints */
+.scene[data-scene="cover"] .cv-hit:focus-visible {
+  outline: 4px solid var(--gold-hi, #e8d2a2);
+  outline-offset: -10px;
+}
+
+/* --------------------------------------------------------------------- hint */
+/* The tap hint sits over the couple, where the sky is bright and the ivory ring would
+   otherwise wash out — warm the gold a little so it stays readable on the pale path. */
+
+.scene[data-scene="cover"] .fx-hint {
+  --fx-glow: rgba(180, 66, 95, 0.42);
+  --fx-ink: rgba(255, 252, 245, 0.98);
+}
+
+/* ------------------------------------------------------------- date cartouche */
+/* The rounded-rect frame around the two dates, its two divider rules and the floral
+   flourish above it — assets/fx/date-cartouche.webp, mounted by js/scenes/cover.js.
+   See that file for WHY it is a scene-owned asset and not a data/scenes.json layer.
+
+   Placed at the union bounds of the three shapes in the client's Cover Slide.psd
+   (design 192,336 -> 889,583), so the box rails land on design x 194.96 / 886.04 and
+   y 405.40 / 579.60 exactly as the PSD's vector paths specify.
+
+   iOS: 697x247 design px is a small fraction of the 1080x1920 frame, and the node
+   carries no filter, no will-change, no blend mode — it is a plain bitmap layer. */
+
+.scene[data-scene="cover"] .cv-cartouche {
+  position: absolute;
+  left: 192px;
+  top: 336px;
+  z-index: 300; /* above the scene art (tops out ~270), below the copy (450) */
+  width: 697px;
+  height: 247px;
+  pointer-events: none; /* decoration: the tap target below owns the gesture */
+}
+
+/* N&S monogram — viewport top of .scene (see mountNsLogo in cover.js). Width from JS. */
+.scene[data-scene="cover"] .cv-ns-logo-slot {
+  position: absolute;
+  z-index: 520;
+  pointer-events: none;
+  padding-top: env(safe-area-inset-top, 0px);
+  box-sizing: content-box;
+}
+
+.scene[data-scene="cover"] .cv-ns-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: screen;
+  transform: scale(1.1);
+  transform-origin: 50% 0;
+  margin-top: -14%;
+}

@@ -1,0 +1,1353 @@
+{
+  "design": {
+    "w": 1080,
+    "h": 1920,
+    "bleed": {
+      "top": 240,
+      "bottom": 240
+    }
+  },
+  "order": [
+    "cover",
+    "names",
+    "mayra-mehendi",
+    "cocktail",
+    "haldi",
+    "wedding",
+    "reception",
+    "last",
+    "map"
+  ],
+  "scenes": {
+    "cover": {
+      "title": "Cover",
+      "underlay": {
+        "src": "assets/scenes/cover/underlay.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "base": {
+        "src": "assets/scenes/cover/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "couple",
+          "src": "assets/scenes/cover/layers/couple.webp",
+          "x": 306,
+          "y": 1206,
+          "w": 601,
+          "h": 715,
+          "z": 10,
+          "role": "interactive"
+        },
+        {
+          "id": "sprig-right",
+          "src": "assets/scenes/cover/layers/sprig-right.webp",
+          "x": 940,
+          "y": 316,
+          "w": 237,
+          "h": 561,
+          "z": 20
+        },
+        {
+          "id": "sprig-left",
+          "src": "assets/scenes/cover/layers/sprig-left.webp",
+          "x": -97,
+          "y": 420,
+          "w": 238,
+          "h": 560,
+          "z": 30
+        }
+      ]
+    },
+    "names": {
+      "title": "Families",
+      "base": {
+        "src": "assets/scenes/names/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "cloud-1",
+          "src": "assets/scenes/names/layers/cloud-1.webp",
+          "x": -186,
+          "y": 141,
+          "w": 681,
+          "h": 143,
+          "z": 10
+        },
+        {
+          "id": "cloud-2",
+          "src": "assets/scenes/names/layers/cloud-2.webp",
+          "x": 583,
+          "y": 472,
+          "w": 577,
+          "h": 121,
+          "z": 20
+        },
+        {
+          "id": "cloud-3",
+          "src": "assets/scenes/names/layers/cloud-3.webp",
+          "x": 707,
+          "y": 172,
+          "w": 576,
+          "h": 122,
+          "z": 30
+        },
+        {
+          "id": "cloud-4",
+          "src": "assets/scenes/names/layers/cloud-4.webp",
+          "x": -203,
+          "y": 383,
+          "w": 576,
+          "h": 122,
+          "z": 40
+        },
+        {
+          "id": "cloud-5",
+          "src": "assets/scenes/names/layers/cloud-5.webp",
+          "x": 415,
+          "y": 324,
+          "w": 274,
+          "h": 86,
+          "z": 50
+        },
+        {
+          "id": "bush-left",
+          "src": "assets/scenes/names/layers/bush-left.webp",
+          "x": -21,
+          "y": 960,
+          "w": 143,
+          "h": 312,
+          "z": 60
+        },
+        {
+          "id": "bush-row-mid",
+          "src": "assets/scenes/names/layers/bush-row-mid.webp",
+          "x": 216,
+          "y": 1395,
+          "w": 1080,
+          "h": 348,
+          "z": 70
+        },
+        {
+          "id": "bush-row-right",
+          "src": "assets/scenes/names/layers/bush-row-right.webp",
+          "x": 696,
+          "y": 1555,
+          "w": 1052,
+          "h": 209,
+          "z": 80
+        },
+        {
+          "id": "bush-mid-right",
+          "src": "assets/scenes/names/layers/bush-mid-right.webp",
+          "x": 830,
+          "y": 971,
+          "w": 284,
+          "h": 324,
+          "z": 90
+        },
+        {
+          "id": "tree-left",
+          "src": "assets/scenes/names/layers/tree-left.webp",
+          "x": -181,
+          "y": 1201,
+          "w": 468,
+          "h": 542,
+          "z": 100
+        },
+        {
+          "id": "bush-front-right",
+          "src": "assets/scenes/names/layers/bush-front-right.webp",
+          "x": 896,
+          "y": 1635,
+          "w": 550,
+          "h": 368,
+          "z": 110
+        },
+        {
+          "id": "yellow-cluster-1",
+          "src": "assets/scenes/names/layers/yellow-cluster-1.webp",
+          "x": 766,
+          "y": 1038,
+          "w": 286,
+          "h": 85,
+          "z": 120
+        },
+        {
+          "id": "yellow-cluster-2",
+          "src": "assets/scenes/names/layers/yellow-cluster-2.webp",
+          "x": -211,
+          "y": 1353,
+          "w": 286,
+          "h": 85,
+          "z": 130
+        },
+        {
+          "id": "yellow-cluster-3",
+          "src": "assets/scenes/names/layers/yellow-cluster-3.webp",
+          "x": -51,
+          "y": 1430,
+          "w": 286,
+          "h": 85,
+          "z": 140
+        },
+        {
+          "id": "yellow-cluster-4",
+          "src": "assets/scenes/names/layers/yellow-cluster-4.webp",
+          "x": -125,
+          "y": 1353,
+          "w": 286,
+          "h": 85,
+          "z": 150
+        },
+        {
+          "id": "yellow-cluster-5",
+          "src": "assets/scenes/names/layers/yellow-cluster-5.webp",
+          "x": 696,
+          "y": 1074,
+          "w": 286,
+          "h": 85,
+          "z": 160
+        },
+        {
+          "id": "tuft-mid",
+          "src": "assets/scenes/names/layers/tuft-mid.webp",
+          "x": 472,
+          "y": 1264,
+          "w": 122,
+          "h": 101,
+          "z": 180
+        },
+        {
+          "id": "vine-left",
+          "src": "assets/scenes/names/layers/vine-left.webp",
+          "x": -460,
+          "y": 355,
+          "w": 578,
+          "h": 622,
+          "z": 190
+        },
+        {
+          "id": "vine-right",
+          "src": "assets/scenes/names/layers/vine-right.webp",
+          "x": 942,
+          "y": 166,
+          "w": 253,
+          "h": 391,
+          "z": 200
+        },
+        {
+          "id": "roses-left",
+          "src": "assets/scenes/names/layers/roses-left.webp",
+          "x": -77,
+          "y": 537,
+          "w": 191,
+          "h": 265,
+          "z": 210
+        },
+        {
+          "id": "sprig-right",
+          "src": "assets/scenes/names/layers/sprig-right.webp",
+          "x": 839,
+          "y": -148,
+          "w": 462,
+          "h": 323,
+          "z": 220
+        },
+        {
+          "id": "sprig-left",
+          "src": "assets/scenes/names/layers/sprig-left.webp",
+          "x": -167,
+          "y": -136,
+          "w": 462,
+          "h": 323,
+          "z": 230
+        },
+        {
+          "id": "ganesha",
+          "src": "assets/scenes/names/layers/ganesha.webp",
+          "x": 486,
+          "y": 8,
+          "w": 108,
+          "h": 158,
+          "z": 240
+        }
+      ]
+    },
+    "mayra-mehendi": {
+      "title": "Mayra & Mehendi",
+      "base": {
+        "src": "assets/scenes/mayra-mehendi/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "balloon",
+          "src": "assets/scenes/mayra-mehendi/layers/balloon.webp",
+          "x": 56,
+          "y": 1186,
+          "w": 235,
+          "h": 369,
+          "z": 10,
+          "role": "interactive"
+        },
+        {
+          "id": "dancer",
+          "src": "assets/scenes/mayra-mehendi/layers/dancer.webp",
+          "x": 766,
+          "y": 1180,
+          "w": 204,
+          "h": 474,
+          "z": 20
+        },
+        {
+          "id": "man-left",
+          "src": "assets/scenes/mayra-mehendi/layers/man-left.webp",
+          "x": 251,
+          "y": 1263,
+          "w": 126,
+          "h": 371,
+          "z": 30
+        },
+        {
+          "id": "women-group",
+          "src": "assets/scenes/mayra-mehendi/layers/women-group.webp",
+          "x": 232,
+          "y": 1339,
+          "w": 651,
+          "h": 466,
+          "z": 40
+        },
+        {
+          "id": "pot-front-right",
+          "src": "assets/scenes/mayra-mehendi/layers/pot-front-right.webp",
+          "x": 794,
+          "y": 1654,
+          "w": 186,
+          "h": 117,
+          "z": 50
+        },
+        {
+          "id": "pot-back-right",
+          "src": "assets/scenes/mayra-mehendi/layers/pot-back-right.webp",
+          "x": 887,
+          "y": 1592,
+          "w": 242,
+          "h": 264,
+          "z": 60
+        },
+        {
+          "id": "flower-row-right",
+          "src": "assets/scenes/mayra-mehendi/layers/flower-row-right.webp",
+          "x": 686,
+          "y": 1805,
+          "w": 443,
+          "h": 142,
+          "z": 70
+        },
+        {
+          "id": "drapes",
+          "src": "assets/scenes/mayra-mehendi/layers/drapes.webp",
+          "x": -24,
+          "y": -221,
+          "w": 1133,
+          "h": 343,
+          "z": 80
+        },
+        {
+          "id": "tassel-right",
+          "src": "assets/scenes/mayra-mehendi/layers/tassel-right.webp",
+          "x": 908,
+          "y": 106,
+          "w": 150,
+          "h": 295,
+          "z": 90
+        },
+        {
+          "id": "tassel-left",
+          "src": "assets/scenes/mayra-mehendi/layers/tassel-left.webp",
+          "x": 19,
+          "y": 5,
+          "w": 150,
+          "h": 295,
+          "z": 100
+        },
+        {
+          "id": "umbrella-left",
+          "src": "assets/scenes/mayra-mehendi/layers/umbrella-left.webp",
+          "x": 74,
+          "y": -48,
+          "w": 305,
+          "h": 259,
+          "z": 110
+        },
+        {
+          "id": "umbrella-right",
+          "src": "assets/scenes/mayra-mehendi/layers/umbrella-right.webp",
+          "x": 674,
+          "y": -103,
+          "w": 387,
+          "h": 332,
+          "z": 120
+        },
+        {
+          "id": "umbrella-mid",
+          "src": "assets/scenes/mayra-mehendi/layers/umbrella-mid.webp",
+          "x": 356,
+          "y": -174,
+          "w": 334,
+          "h": 285,
+          "z": 130
+        },
+        {
+          "id": "tassel-mid",
+          "src": "assets/scenes/mayra-mehendi/layers/tassel-mid.webp",
+          "x": 611,
+          "y": -80,
+          "w": 126,
+          "h": 248,
+          "z": 140
+        }
+      ]
+    },
+    "cocktail": {
+      "title": "Cocktail",
+      "base": {
+        "src": "assets/scenes/cocktail/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "mirror",
+          "src": "assets/scenes/cocktail/layers/mirror.webp",
+          "x": 5,
+          "y": 1166,
+          "w": 428,
+          "h": 763,
+          "z": 10,
+          "role": "interactive"
+        },
+        {
+          "id": "gift-boxes",
+          "src": "assets/scenes/cocktail/layers/gift-boxes.webp",
+          "x": 145,
+          "y": 1682,
+          "w": 302,
+          "h": 246,
+          "z": 20
+        },
+        {
+          "id": "couple",
+          "src": "assets/scenes/cocktail/layers/couple.webp",
+          "x": 534,
+          "y": 1289,
+          "w": 417,
+          "h": 567,
+          "z": 30
+        },
+        {
+          "id": "front-grass",
+          "src": "assets/scenes/cocktail/layers/front-grass.webp",
+          "x": 397,
+          "y": 1739,
+          "w": 683,
+          "h": 251,
+          "z": 40
+        },
+        {
+          "id": "front-frond-mid",
+          "src": "assets/scenes/cocktail/layers/front-frond-mid.webp",
+          "x": 637,
+          "y": 1317,
+          "w": 562,
+          "h": 740,
+          "z": 50
+        },
+        {
+          "id": "front-frond-left",
+          "src": "assets/scenes/cocktail/layers/front-frond-left.webp",
+          "x": 428,
+          "y": 1330,
+          "w": 562,
+          "h": 740,
+          "z": 60
+        },
+        {
+          "id": "front-frond-right",
+          "src": "assets/scenes/cocktail/layers/front-frond-right.webp",
+          "x": 865,
+          "y": 1361,
+          "w": 562,
+          "h": 740,
+          "z": 70
+        },
+        {
+          "id": "front-blossoms",
+          "src": "assets/scenes/cocktail/layers/front-blossoms.webp",
+          "x": 630,
+          "y": 1763,
+          "w": 307,
+          "h": 225,
+          "z": 80
+        },
+        {
+          "id": "front-cluster",
+          "src": "assets/scenes/cocktail/layers/front-cluster.webp",
+          "x": 875,
+          "y": 1783,
+          "w": 194,
+          "h": 186,
+          "z": 90
+        },
+        {
+          "id": "fairy-lights",
+          "src": "assets/scenes/cocktail/layers/fairy-lights.webp",
+          "x": 0,
+          "y": -176,
+          "w": 1080,
+          "h": 696,
+          "z": 100
+        },
+        {
+          "id": "curtain-back-1",
+          "src": "assets/scenes/cocktail/layers/curtain-back-1.webp",
+          "x": 339,
+          "y": 77,
+          "w": 544,
+          "h": 257,
+          "z": 110
+        },
+        {
+          "id": "curtain-back-2",
+          "src": "assets/scenes/cocktail/layers/curtain-back-2.webp",
+          "x": -158,
+          "y": 152,
+          "w": 544,
+          "h": 257,
+          "z": 120
+        },
+        {
+          "id": "curtain-back-3",
+          "src": "assets/scenes/cocktail/layers/curtain-back-3.webp",
+          "x": 566,
+          "y": -45,
+          "w": 544,
+          "h": 257,
+          "z": 130
+        },
+        {
+          "id": "curtain-front-1",
+          "src": "assets/scenes/cocktail/layers/curtain-front-1.webp",
+          "x": 189,
+          "y": 43,
+          "w": 544,
+          "h": 257,
+          "z": 140
+        },
+        {
+          "id": "curtain-front-2",
+          "src": "assets/scenes/cocktail/layers/curtain-front-2.webp",
+          "x": -212,
+          "y": -8,
+          "w": 560,
+          "h": 301,
+          "z": 150
+        },
+        {
+          "id": "curtain-front-3",
+          "src": "assets/scenes/cocktail/layers/curtain-front-3.webp",
+          "x": 401,
+          "y": 0,
+          "w": 591,
+          "h": 178,
+          "z": 160
+        },
+        {
+          "id": "curtain-front-4",
+          "src": "assets/scenes/cocktail/layers/curtain-front-4.webp",
+          "x": 0,
+          "y": 0,
+          "w": 591,
+          "h": 178,
+          "z": 170
+        },
+        {
+          "id": "chandelier-top-1",
+          "src": "assets/scenes/cocktail/layers/chandelier-top-1.webp",
+          "x": 557,
+          "y": -171,
+          "w": 166,
+          "h": 331,
+          "z": 180
+        },
+        {
+          "id": "drape-top-1",
+          "src": "assets/scenes/cocktail/layers/drape-top-1.webp",
+          "x": 0,
+          "y": -210,
+          "w": 1080,
+          "h": 387,
+          "z": 190
+        },
+        {
+          "id": "drape-top-2",
+          "src": "assets/scenes/cocktail/layers/drape-top-2.webp",
+          "x": 0,
+          "y": -210,
+          "w": 898,
+          "h": 295,
+          "z": 200
+        },
+        {
+          "id": "chandelier-top-2",
+          "src": "assets/scenes/cocktail/layers/chandelier-top-2.webp",
+          "x": 242,
+          "y": -210,
+          "w": 188,
+          "h": 377,
+          "z": 210
+        },
+        {
+          "id": "drape-top-3",
+          "src": "assets/scenes/cocktail/layers/drape-top-3.webp",
+          "x": 108,
+          "y": -210,
+          "w": 972,
+          "h": 260,
+          "z": 220
+        },
+        {
+          "id": "chandelier-top-3",
+          "src": "assets/scenes/cocktail/layers/chandelier-top-3.webp",
+          "x": 326,
+          "y": -151,
+          "w": 238,
+          "h": 493,
+          "z": 230
+        },
+        {
+          "id": "drape-top-4",
+          "src": "assets/scenes/cocktail/layers/drape-top-4.webp",
+          "x": 0,
+          "y": -210,
+          "w": 1080,
+          "h": 429,
+          "z": 240
+        },
+        {
+          "id": "chandelier-top-4",
+          "src": "assets/scenes/cocktail/layers/chandelier-top-4.webp",
+          "x": 20,
+          "y": -210,
+          "w": 987,
+          "h": 552,
+          "z": 250
+        },
+        {
+          "id": "chandelier-tree-1",
+          "src": "assets/scenes/cocktail/layers/chandelier-tree-1.webp",
+          "x": 480,
+          "y": 180,
+          "w": 506,
+          "h": 504,
+          "z": 260
+        },
+        {
+          "id": "chandelier-tree-2",
+          "src": "assets/scenes/cocktail/layers/chandelier-tree-2.webp",
+          "x": 693,
+          "y": 420,
+          "w": 506,
+          "h": 504,
+          "z": 270
+        }
+      ]
+    },
+    "haldi": {
+      "title": "Haldi",
+      "base": {
+        "src": "assets/scenes/haldi/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "umbrella-left",
+          "src": "assets/scenes/haldi/layers/umbrella-left.webp",
+          "x": 71,
+          "y": 1144,
+          "w": 289,
+          "h": 442,
+          "z": 10
+        },
+        {
+          "id": "umbrella-right",
+          "src": "assets/scenes/haldi/layers/umbrella-right.webp",
+          "x": 768,
+          "y": 1149,
+          "w": 213,
+          "h": 326,
+          "z": 20
+        },
+        {
+          "id": "gazebo",
+          "src": "assets/scenes/haldi/layers/gazebo.webp",
+          "x": -265,
+          "y": 1251,
+          "w": 577,
+          "h": 553,
+          "z": 30
+        },
+        {
+          "id": "cart-frame",
+          "src": "assets/scenes/haldi/layers/cart-frame.webp",
+          "x": 822,
+          "y": 1296,
+          "w": 298,
+          "h": 363,
+          "z": 40
+        },
+        {
+          "id": "cart-flowers",
+          "src": "assets/scenes/haldi/layers/cart-flowers.webp",
+          "x": 837,
+          "y": 1280,
+          "w": 308,
+          "h": 264,
+          "z": 50
+        },
+        {
+          "id": "cart-pots",
+          "src": "assets/scenes/haldi/layers/cart-pots.webp",
+          "x": 818,
+          "y": 1449,
+          "w": 299,
+          "h": 112,
+          "z": 60
+        },
+        {
+          "id": "basket-left",
+          "src": "assets/scenes/haldi/layers/basket-left.webp",
+          "x": -235,
+          "y": 554,
+          "w": 349,
+          "h": 500,
+          "z": 70
+        },
+        {
+          "id": "basket-right",
+          "src": "assets/scenes/haldi/layers/basket-right.webp",
+          "x": 963,
+          "y": 578,
+          "w": 349,
+          "h": 500,
+          "z": 80
+        },
+        {
+          "id": "pot-right",
+          "src": "assets/scenes/haldi/layers/pot-right.webp",
+          "x": 956,
+          "y": 1604,
+          "w": 161,
+          "h": 168,
+          "z": 90
+        },
+        {
+          "id": "couple",
+          "src": "assets/scenes/haldi/layers/couple.webp",
+          "x": 298,
+          "y": 1553,
+          "w": 716,
+          "h": 285,
+          "z": 100,
+          "role": "interactive"
+        },
+        {
+          "id": "flower-pot-left",
+          "src": "assets/scenes/haldi/layers/flower-pot-left.webp",
+          "x": -6,
+          "y": 1726,
+          "w": 304,
+          "h": 192,
+          "z": 110
+        },
+        {
+          "id": "tree-blossoms",
+          "src": "assets/scenes/haldi/layers/tree-blossoms.webp",
+          "x": 563,
+          "y": -48,
+          "w": 516,
+          "h": 450,
+          "z": 120
+        },
+        {
+          "id": "lamp-1",
+          "src": "assets/scenes/haldi/layers/lamp-1.webp",
+          "x": 510,
+          "y": -106,
+          "w": 153,
+          "h": 349,
+          "z": 130
+        },
+        {
+          "id": "lamp-2",
+          "src": "assets/scenes/haldi/layers/lamp-2.webp",
+          "x": 780,
+          "y": 83,
+          "w": 95,
+          "h": 217,
+          "z": 140
+        },
+        {
+          "id": "lamp-3",
+          "src": "assets/scenes/haldi/layers/lamp-3.webp",
+          "x": 914,
+          "y": 175,
+          "w": 107,
+          "h": 246,
+          "z": 150
+        },
+        {
+          "id": "lamp-4",
+          "src": "assets/scenes/haldi/layers/lamp-4.webp",
+          "x": 895,
+          "y": -142,
+          "w": 153,
+          "h": 349,
+          "z": 160
+        }
+      ]
+    },
+    "wedding": {
+      "title": "Wedding",
+      "base": {
+        "src": "assets/scenes/wedding/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "string-1",
+          "src": "assets/scenes/wedding/layers/string-1.webp",
+          "x": -40,
+          "y": 335,
+          "w": 94,
+          "h": 266,
+          "z": 10
+        },
+        {
+          "id": "string-2",
+          "src": "assets/scenes/wedding/layers/string-2.webp",
+          "x": 46,
+          "y": 210,
+          "w": 94,
+          "h": 266,
+          "z": 20
+        },
+        {
+          "id": "string-3",
+          "src": "assets/scenes/wedding/layers/string-3.webp",
+          "x": -12,
+          "y": 118,
+          "w": 78,
+          "h": 217,
+          "z": 30
+        },
+        {
+          "id": "string-4",
+          "src": "assets/scenes/wedding/layers/string-4.webp",
+          "x": 116,
+          "y": 402,
+          "w": 78,
+          "h": 217,
+          "z": 40
+        },
+        {
+          "id": "arch-chandelier-1",
+          "src": "assets/scenes/wedding/layers/arch-chandelier-1.webp",
+          "x": 735,
+          "y": 1034,
+          "w": 311,
+          "h": 310,
+          "z": 50
+        },
+        {
+          "id": "arch-chandelier-2",
+          "src": "assets/scenes/wedding/layers/arch-chandelier-2.webp",
+          "x": 576,
+          "y": 1060,
+          "w": 226,
+          "h": 226,
+          "z": 60
+        },
+        {
+          "id": "mirror",
+          "src": "assets/scenes/wedding/layers/mirror.webp",
+          "x": 760,
+          "y": 1240,
+          "w": 350,
+          "h": 578,
+          "z": 70
+        },
+        {
+          "id": "vase-flowers",
+          "src": "assets/scenes/wedding/layers/vase-flowers.webp",
+          "x": 728,
+          "y": 1688,
+          "w": 103,
+          "h": 123,
+          "z": 80
+        },
+        {
+          "id": "vase-tall",
+          "src": "assets/scenes/wedding/layers/vase-tall.webp",
+          "x": 831,
+          "y": 1521,
+          "w": 88,
+          "h": 247,
+          "z": 90
+        },
+        {
+          "id": "candelabra",
+          "src": "assets/scenes/wedding/layers/candelabra.webp",
+          "x": 770,
+          "y": 1511,
+          "w": 120,
+          "h": 281,
+          "z": 100
+        },
+        {
+          "id": "rose-bowl",
+          "src": "assets/scenes/wedding/layers/rose-bowl.webp",
+          "x": 785,
+          "y": 1763,
+          "w": 83,
+          "h": 42,
+          "z": 110
+        },
+        {
+          "id": "chandelier-1",
+          "src": "assets/scenes/wedding/layers/chandelier-1.webp",
+          "x": 203,
+          "y": -83,
+          "w": 311,
+          "h": 310,
+          "z": 120
+        },
+        {
+          "id": "chandelier-2",
+          "src": "assets/scenes/wedding/layers/chandelier-2.webp",
+          "x": 368,
+          "y": -184,
+          "w": 421,
+          "h": 419,
+          "z": 130
+        },
+        {
+          "id": "chandelier-3",
+          "src": "assets/scenes/wedding/layers/chandelier-3.webp",
+          "x": 616,
+          "y": -181,
+          "w": 421,
+          "h": 419,
+          "z": 140
+        },
+        {
+          "id": "chandelier-4",
+          "src": "assets/scenes/wedding/layers/chandelier-4.webp",
+          "x": 787,
+          "y": 64,
+          "w": 326,
+          "h": 325,
+          "z": 150
+        },
+        {
+          "id": "couple",
+          "src": "assets/scenes/wedding/layers/couple.webp",
+          "x": 285,
+          "y": 1353,
+          "w": 337,
+          "h": 538,
+          "z": 160,
+          "role": "interactive"
+        }
+      ]
+    },
+    "reception": {
+      "title": "The Grand Soiree",
+      "base": {
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400,
+        "src": "assets/scenes/reception/base.webp"
+      },
+      "layers": [
+        {
+          "id": "ball-1",
+          "src": "assets/scenes/reception/layers/ball-1.webp",
+          "x": 44,
+          "y": -40,
+          "w": 250,
+          "h": 351,
+          "z": 10,
+          "role": "interactive"
+        },
+        {
+          "id": "ball-2",
+          "src": "assets/scenes/reception/layers/ball-2.webp",
+          "x": 800,
+          "y": -60,
+          "w": 200,
+          "h": 263,
+          "z": 12,
+          "role": "interactive"
+        },
+        {
+          "id": "ball-3",
+          "src": "assets/scenes/reception/layers/ball-3.webp",
+          "x": 640,
+          "y": 150,
+          "w": 118,
+          "h": 168,
+          "z": 14,
+          "role": "interactive"
+        },
+        {
+          "id": "couple",
+          "src": "assets/scenes/reception/layers/couple.webp",
+          "x": 360,
+          "y": 1174,
+          "w": 360,
+          "h": 696,
+          "z": 20
+        }
+      ]
+    },
+    "last": {
+      "title": "Thank You",
+      "underlay": {
+        "src": "assets/scenes/last/underlay.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "base": {
+        "src": "assets/scenes/last/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "fountain",
+          "src": "assets/scenes/last/layers/fountain.webp",
+          "x": 33,
+          "y": 1570,
+          "w": 634,
+          "h": 206,
+          "z": 10,
+          "role": "interactive"
+        },
+        {
+          "id": "bush-left",
+          "src": "assets/scenes/last/layers/bush-left.webp",
+          "x": -128,
+          "y": 1705,
+          "w": 224,
+          "h": 216,
+          "z": 20
+        },
+        {
+          "id": "bush-left-2",
+          "src": "assets/scenes/last/layers/bush-left-2.webp",
+          "x": -35,
+          "y": 1798,
+          "w": 218,
+          "h": 235,
+          "z": 30
+        },
+        {
+          "id": "flower-band-wide",
+          "src": "assets/scenes/last/layers/flower-band-wide.webp",
+          "x": -226,
+          "y": 1744,
+          "w": 1432,
+          "h": 255,
+          "z": 40
+        },
+        {
+          "id": "flower-band-left",
+          "src": "assets/scenes/last/layers/flower-band-left.webp",
+          "x": -708,
+          "y": 1752,
+          "w": 1432,
+          "h": 255,
+          "z": 50
+        },
+        {
+          "id": "wisteria-right",
+          "src": "assets/scenes/last/layers/wisteria-right.webp",
+          "x": 605,
+          "y": -109,
+          "w": 601,
+          "h": 906,
+          "z": 60
+        },
+        {
+          "id": "wisteria-left",
+          "src": "assets/scenes/last/layers/wisteria-left.webp",
+          "x": -128,
+          "y": -227,
+          "w": 606,
+          "h": 906,
+          "z": 70
+        }
+      ]
+    },
+    "compliments": {
+      "title": "Best Wishes",
+      "base": {
+        "src": "assets/scenes/names/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": [
+        {
+          "id": "cloud-1",
+          "src": "assets/scenes/names/layers/cloud-1.webp",
+          "x": -186,
+          "y": 141,
+          "w": 681,
+          "h": 143,
+          "z": 10
+        },
+        {
+          "id": "cloud-2",
+          "src": "assets/scenes/names/layers/cloud-2.webp",
+          "x": 583,
+          "y": 472,
+          "w": 577,
+          "h": 121,
+          "z": 20
+        },
+        {
+          "id": "cloud-3",
+          "src": "assets/scenes/names/layers/cloud-3.webp",
+          "x": 707,
+          "y": 172,
+          "w": 576,
+          "h": 122,
+          "z": 30
+        },
+        {
+          "id": "cloud-4",
+          "src": "assets/scenes/names/layers/cloud-4.webp",
+          "x": -203,
+          "y": 383,
+          "w": 576,
+          "h": 122,
+          "z": 40
+        },
+        {
+          "id": "cloud-5",
+          "src": "assets/scenes/names/layers/cloud-5.webp",
+          "x": 415,
+          "y": 324,
+          "w": 274,
+          "h": 86,
+          "z": 50
+        },
+        {
+          "id": "bush-left",
+          "src": "assets/scenes/names/layers/bush-left.webp",
+          "x": -21,
+          "y": 960,
+          "w": 143,
+          "h": 312,
+          "z": 60
+        },
+        {
+          "id": "bush-row-mid",
+          "src": "assets/scenes/names/layers/bush-row-mid.webp",
+          "x": 216,
+          "y": 1395,
+          "w": 1080,
+          "h": 348,
+          "z": 70
+        },
+        {
+          "id": "bush-row-right",
+          "src": "assets/scenes/names/layers/bush-row-right.webp",
+          "x": 696,
+          "y": 1555,
+          "w": 1052,
+          "h": 209,
+          "z": 80
+        },
+        {
+          "id": "bush-mid-right",
+          "src": "assets/scenes/names/layers/bush-mid-right.webp",
+          "x": 830,
+          "y": 971,
+          "w": 284,
+          "h": 324,
+          "z": 90
+        },
+        {
+          "id": "tree-left",
+          "src": "assets/scenes/names/layers/tree-left.webp",
+          "x": -181,
+          "y": 1201,
+          "w": 468,
+          "h": 542,
+          "z": 100
+        },
+        {
+          "id": "bush-front-right",
+          "src": "assets/scenes/names/layers/bush-front-right.webp",
+          "x": 896,
+          "y": 1635,
+          "w": 550,
+          "h": 368,
+          "z": 110
+        },
+        {
+          "id": "yellow-cluster-1",
+          "src": "assets/scenes/names/layers/yellow-cluster-1.webp",
+          "x": 766,
+          "y": 1038,
+          "w": 286,
+          "h": 85,
+          "z": 120
+        },
+        {
+          "id": "yellow-cluster-2",
+          "src": "assets/scenes/names/layers/yellow-cluster-2.webp",
+          "x": -211,
+          "y": 1353,
+          "w": 286,
+          "h": 85,
+          "z": 130
+        },
+        {
+          "id": "yellow-cluster-3",
+          "src": "assets/scenes/names/layers/yellow-cluster-3.webp",
+          "x": -51,
+          "y": 1430,
+          "w": 286,
+          "h": 85,
+          "z": 140
+        },
+        {
+          "id": "yellow-cluster-4",
+          "src": "assets/scenes/names/layers/yellow-cluster-4.webp",
+          "x": -125,
+          "y": 1353,
+          "w": 286,
+          "h": 85,
+          "z": 150
+        },
+        {
+          "id": "yellow-cluster-5",
+          "src": "assets/scenes/names/layers/yellow-cluster-5.webp",
+          "x": 696,
+          "y": 1074,
+          "w": 286,
+          "h": 85,
+          "z": 160
+        },
+        {
+          "id": "tuft-mid",
+          "src": "assets/scenes/names/layers/tuft-mid.webp",
+          "x": 472,
+          "y": 1264,
+          "w": 122,
+          "h": 101,
+          "z": 180
+        },
+        {
+          "id": "vine-left",
+          "src": "assets/scenes/names/layers/vine-left.webp",
+          "x": -460,
+          "y": 355,
+          "w": 578,
+          "h": 622,
+          "z": 190
+        },
+        {
+          "id": "vine-right",
+          "src": "assets/scenes/names/layers/vine-right.webp",
+          "x": 942,
+          "y": 166,
+          "w": 253,
+          "h": 391,
+          "z": 200
+        },
+        {
+          "id": "roses-left",
+          "src": "assets/scenes/names/layers/roses-left.webp",
+          "x": -77,
+          "y": 537,
+          "w": 191,
+          "h": 265,
+          "z": 210
+        },
+        {
+          "id": "sprig-right",
+          "src": "assets/scenes/names/layers/sprig-right.webp",
+          "x": 839,
+          "y": -148,
+          "w": 462,
+          "h": 323,
+          "z": 220
+        },
+        {
+          "id": "sprig-left",
+          "src": "assets/scenes/names/layers/sprig-left.webp",
+          "x": -167,
+          "y": -136,
+          "w": 462,
+          "h": 323,
+          "z": 230
+        }
+      ]
+    },
+    "map": {
+      "title": "Venue",
+      "base": {
+        "src": "assets/scenes/map/base.webp",
+        "x": 0,
+        "y": -240,
+        "w": 1080,
+        "h": 2400
+      },
+      "layers": []
+    }
+  }
+}

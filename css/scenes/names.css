@@ -1,0 +1,93 @@
+/* names.css — scene 2 of 7. Owned by js/scenes/names.js.
+ *
+ * Everything is scoped to .scene[data-scene="names"] and "compliments" (the "Best wishes
+ * from" slide, which reuses this scene). All lengths are DESIGN px
+ * (1080x1920) — the frame is uniformly scaled, so design px are the only unit that
+ * keeps chrome locked to the artwork on every screen.
+ *
+ * Motion lives in JS (js/fx/kit.js). This file only places the hit target and tints
+ * the affordance.
+ */
+
+/* -------------------------------------------------------------- hit target */
+/* One tap on the planted lower third looses the breeze. Invisible by design:
+   js/fx/kit.js draws the only affordance the guest ever sees. The sky above this rect
+   carries the invitation copy and stays deliberately inert.
+
+   No touch-action of its own: css/stage.css already sets `manipulation` on the device,
+   which is all a tap needs — the swipe's `pan-y` claim went with the swipe. */
+
+.scene:is([data-scene="names"], [data-scene="compliments"]) .nm-hit {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  z-index: 470; /* above every layer, below the hint (480) and .scene-text (500) */
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scene:is([data-scene="names"], [data-scene="compliments"]) .nm-hit:disabled {
+  cursor: default;
+}
+
+/* keyboard users get the same gesture; the outline is the only time this box paints */
+.scene:is([data-scene="names"], [data-scene="compliments"]) .nm-hit:focus-visible {
+  outline: 4px solid var(--sage, #7b8b5e);
+  outline-offset: -12px;
+}
+
+/* The clouds carry a `transform` drift loop and a `translate` run-out at once, so
+   `transform` must stay free for the loop. Nothing in this file may set it. */
+
+/* --------------------------------------------------------------------- hint */
+/* The tap hint rides over the pale meadow, where a pure ivory dot would disappear —
+   push it toward the sage/gold of the planting so it reads without shouting. */
+
+.scene:is([data-scene="names"], [data-scene="compliments"]) .fx-hint {
+  --fx-ink: rgba(255, 253, 246, 0.98);
+  --fx-glow: rgba(123, 139, 94, 0.5);
+}
+
+/* ------------------------------------------------------------------ clouds */
+/* Hidden, not deleted. The five cloud cutouts come from the client's FIRST, art-only
+   PSD set; their current Names.psd has no cloud layer and Names.jpg shows clean paper
+   behind the couple's names. Ours ran grey line-work through the crimson type, which
+   read as the names being "not bold" even though they measure at 0.99-1.06 of the
+   client's own ink. Client asked for them to go (2026-09-04).
+
+   data/scenes.json is regenerated from the old PSDs by tools/extract_muskan.py, so
+   removing the layers there would not survive; this rule does. js/scenes/names.js
+   carries the matching note and an empty CLOUDS list. */
+
+.scene:is([data-scene="names"], [data-scene="compliments"]) [data-layer^="cloud-"] {
+  display: none;
+}
+
+.scene[data-scene="names"] [data-layer="ganesha"] {
+  top: 8px !important;
+  left: 50% !important;
+  width: 108px !important;
+  height: 158px !important;
+  margin-left: -54px;
+  object-fit: contain;
+  object-position: top center;
+}
+
+/* Vakratunda shloka — live type directly under Ganesha (Tiro Devanagari in textspec). */
+.scene[data-scene="names"] .ms-b[data-block="shloka"] {
+  --ms-block-ms: 920ms;
+}
+
+.scene[data-scene="names"] .ms-b[data-block="shloka"] .ms-ln {
+  letter-spacing: 0.02em;
+}
+
+.scene[data-scene="names"] .ms-b[data-block="shloka"] .ms-r {
+  font-feature-settings: "kern" 1, "liga" 1;
+}

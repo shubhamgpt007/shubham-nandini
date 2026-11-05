@@ -1,0 +1,5613 @@
+{
+ "_generated": "scripts/apply_nandini_text.py (NS_wed_details.pdf on Deepesh template)",
+ "design": {
+  "w": 1080,
+  "h": 1920
+ },
+ "units": "All *Px values are in the 1080x1920 design space (PSD FontSize * transform scaleY). anchor.x/baselineY are the PSD type origin: x is the alignment anchor, baselineY the first line's baseline.",
+ "notes": [
+  "Every readable string on this invite is live HTML text. Nothing here may be shipped as flattened image type.",
+  "ALWAYS typeset a run at renderSizePx and raise it renderRaisePx above the line's baseline. sizePx/baselineShiftPx are the raw PSD numbers kept for traceability; for superscripts they are NOT what Photoshop drew. renderSizePx = sizePx * superscriptFactors.size (0.583) and renderRaisePx = baselineShiftPx + superscriptFactors.position (0.333) * sizePx. Never add a CSS vertical-align:super on top -- that would scale the glyph twice.",
+  "The four event-scene date-day superscripts verify against the client JPGs to under half a pixel under that model. The two cover \"th\" runs do not: their geometrySource is \"measured:qa/textref\" and the numbers came off qa/textref/cover.jpg. Do not recompute them from sizePx.",
+  "run.fontFeatures must be applied via font-feature-settings. All-caps runs carry \"case\", which is what gives Cormorant its tall lining figures -- without it \"NOVEMBER, 2026\" renders with short old-style figures. text-transform alone is not enough.",
+  "textTransform mirrors Photoshop's All Caps button. `text`/`lines` keep the designer's source casing (\"Hari Family\", \"November, 2026\") so the copy stays editable; `displayText` is what must appear on screen. Apply it with CSS text-transform, never by uppercasing the HTML source.",
+  "Rungkut's lowercase slots hold SMALL-CAP letterforms -- \"Muskan\" renders as a swashed M followed by small caps. Never text-transform:uppercase a Rungkut string; type the source casing exactly as it is in `text`.",
+  "run.ligatures is Photoshop's Ligatures checkbox -- it is OFF on every cover block, so those need font-variant-ligatures:none.",
+  "run.fauxBold is Photoshop's synthetic bold. The supplied families ship a single weight each, so it has to be emulated. It thickens the outline AND widens every advance by about 0.027em -- measured against the client JPGs: cover/venue line 1 renders 429px unstyled vs 458px in the reference (23 gaps -> 0.0275em), last/rsvp 176 vs 181 (0.025em), names/bride-name 327 vs 338 (0.029em). -webkit-text-stroke alone will NOT close the gap because it does not touch advances; pair it with a matching letter-spacing bump and re-measure against qa/textref.",
+  "block.outline is the layer's Photoshop Stroke effect -- the other thing that adds weight without touching advances, and the reason the cover's \"Muskan & Shourya\" is heavier than the same face elsewhere. Apply outline.webkitTextStrokePx as -webkit-text-stroke (already doubled for Photoshop's OUTSIDE position, and already in design px: Photoshop does not scale the effect with the layer's transform). It is null on every layer that carries no Stroke.",
+  "anchor.x is the PSD type origin (the centre for textAlign:center); bboxCenterX differs on the script faces because their swashes overhang asymmetrically -- trust anchor.x, use bbox only for QA."
+ ],
+ "fonts": {
+  "families": {
+   "Rungkut": {
+    "weights": {
+     "400": "assets/fonts/rungkut-400.woff2"
+    },
+    "psdNames": [
+     "Rungkut"
+    ]
+   },
+   "Cormorant Garamond": {
+    "weights": {
+     "400": "assets/fonts/cormorant-garamond-400.woff2",
+     "600": "assets/fonts/cormorant-garamond-600.woff2"
+    },
+    "psdNames": [
+     "CormorantGaramond-Regular",
+     "CormorantGaramond-SemiBold",
+     "CormorantGaramond-Medium -> 400 (substituted)"
+    ]
+   },
+   "Hello Bride": {
+    "weights": {
+     "400": "assets/fonts/hello-bride-400.woff2"
+    },
+    "psdNames": [
+     "HelloBrideScript-Regular"
+    ]
+   },
+   "Tiro Devanagari Sanskrit": {
+    "weights": {
+     "400": "assets/fonts/tiro-devanagari-sanskrit-400.woff2"
+    },
+    "psdNames": [],
+    "licence": "SIL OFL 1.1 (assets/fonts/OFL-tiro-devanagari-sanskrit.txt); subset to the shloka's characters via the Google Fonts text= API"
+   }
+  },
+  "map": {
+   "CormorantGaramond-Medium": {
+    "family": "Cormorant Garamond",
+    "weight": 400
+   },
+   "CormorantGaramond-Regular": {
+    "family": "Cormorant Garamond",
+    "weight": 400
+   },
+   "CormorantGaramond-SemiBold": {
+    "family": "Cormorant Garamond",
+    "weight": 600
+   },
+   "HelloBrideScript-Regular": {
+    "family": "Hello Bride",
+    "weight": 400
+   },
+   "Rungkut": {
+    "family": "Rungkut",
+    "weight": 400
+   }
+  },
+  "substitutions": {
+   "CormorantGaramond-Medium": {
+    "usedFamily": "Cormorant Garamond",
+    "usedWeight": 400,
+    "usedFile": "CormorantGaramond-Regular.ttf",
+    "usedBy": [
+     "last/family"
+    ],
+    "evidence": "qa/textref/last.jpg 'HARI FAMILY': median stem width ref 6.0px, Regular 6.0px (+0%), SemiBold 9.0px (+50%); ink coverage ref .193, Regular .221, SemiBold .281; ink width vs 517px PSD bbox: Regular 514 (-0.6%), SemiBold 521 (+0.8%).",
+    "note": "TODO(production): CormorantGaramond-Medium not supplied; using CormorantGaramond-Regular (400)."
+   }
+  },
+  "fauxBoldEmEstimate": 0.027,
+  "stylesheet": "css/fonts.css",
+  "charset": " &(),./01234569:ABCDEFGHIJKLMNOPRSTVWYabcdefghijklmnoprstuvwy|‒–",
+  "subsetCharset": " &'(),./0123456789:ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz|‒–",
+  "licensing": "TODO(production): fonts supplied by the client (~/Downloads/Muskan/Muskan Fonts). Web-embedding licence confirmation is the client's responsibility -- see FONTS.md."
+ },
+ "scenes": {
+  "cover": {
+   "source": "Cover Slide.psd",
+   "sourceDir": "groom",
+   "blocks": [
+    {
+     "id": "couple-names",
+     "layerName": "Shourya & Muskan",
+     "layerPath": "/logo/Shourya & Muskan",
+     "visible": true,
+     "text": "Dr. Shubham & Dr. Nandini",
+     "lines": [
+      "Dr. Shubham & Dr. Nandini"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "Rungkut"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 68.46640000000001,
+     "lineHeightPx": 82.1652,
+     "trackingEm": 0.04,
+     "color": "#535514",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": {
+      "sizePx": 1.0,
+      "position": "outside",
+      "color": "#535514",
+      "webkitTextStrokePx": 2.0
+     },
+     "displayText": "Dr. Shubham & Dr. Nandini",
+     "mixed": false,
+     "bbox": [
+      148,
+      200,
+      933,
+      304
+     ],
+     "bboxSize": [
+      785,
+      104
+     ],
+     "anchor": {
+      "x": 549.58,
+      "baselineY": 290.78,
+      "firstLineTopY": 200,
+      "bboxCenterX": 540.5,
+      "centerDeltaX": -9.08
+     },
+     "transformScale": {
+      "x": 1.39518736,
+      "y": 1.3938828
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Dr. Shubham & Dr. Nandini",
+       "sizePx": 68.46640000000001,
+       "lineHeightPx": 82.1652,
+       "color": "#535514",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.04,
+       "textTransform": "none",
+       "displayText": "Dr. Shubham & Dr. Nandini",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Dr. Shubham & Dr. Nandini",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 68.46640000000001,
+       "renderSizePx": 68.46640000000001,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 45.1926264,
+       "trackingEm": 0.04,
+       "letterSpacingPx": 2.73884,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#535514"
+      }
+     ]
+    },
+    {
+     "id": "date-10",
+     "layerName": "10th November",
+     "layerPath": "/logo/Group 7/Group 8/10th November",
+     "visible": true,
+     "text": "10th\nDecember\n2026",
+     "lines": [
+      "10th",
+      "December",
+      "2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 59.88,
+     "lineHeightPx": 71.86,
+     "trackingEm": 0.0,
+     "color": "#b52645",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "10th\nDecember\n2026",
+     "mixed": true,
+     "bbox": [
+      241,
+      419,
+      466,
+      568
+     ],
+     "bboxSize": [
+      225,
+      149
+     ],
+     "anchor": {
+      "x": 352.93,
+      "baselineY": 464.9,
+      "firstLineTopY": 419,
+      "bboxCenterX": 353.5,
+      "centerDeltaX": 0.57
+     },
+     "transformScale": {
+      "x": 0.779613,
+      "y": 0.778884
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "10th",
+       "sizePx": 59.88,
+       "lineHeightPx": 71.86,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "10th",
+       "mixed": true,
+       "role": "date-day"
+      },
+      {
+       "index": 1,
+       "text": "December",
+       "sizePx": 32.94,
+       "lineHeightPx": 38.0,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.18,
+       "textTransform": "uppercase",
+       "displayText": "DECEMBER",
+       "mixed": false,
+       "role": "date-month"
+      },
+      {
+       "index": 2,
+       "text": "2026",
+       "sizePx": 32.94,
+       "lineHeightPx": 34.0,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.14,
+       "textTransform": "none",
+       "displayText": "2026",
+       "mixed": false,
+       "role": "date-year"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "10",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 59.88,
+       "renderSizePx": 59.88,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.88443,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 0,
+       "text": "th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 59.88,
+       "renderSizePx": 34.91,
+       "renderRaisePx": 19.94,
+       "psdFontSize": 76.88443,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": true,
+       "fontFeatures": [],
+       "geometrySource": "measured:qa/textref",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 1,
+       "text": "December",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 32.94,
+       "renderSizePx": 32.94,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 42.28643,
+       "trackingEm": 0.18,
+       "letterSpacingPx": 5.929,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 2,
+       "text": "2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 32.94,
+       "renderSizePx": 32.94,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 42.28643,
+       "trackingEm": 0.14,
+       "letterSpacingPx": 4.612,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      }
+     ]
+    },
+    {
+     "id": "date-11",
+     "layerName": "11th November",
+     "layerPath": "/logo/Group 7/Group 8/11th November",
+     "visible": true,
+     "text": "11th\nDecember\n2026",
+     "lines": [
+      "11th",
+      "December",
+      "2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 59.88,
+     "lineHeightPx": 71.86,
+     "trackingEm": 0.0,
+     "color": "#b52645",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "11th\nDecember\n2026",
+     "mixed": true,
+     "bbox": [
+      613,
+      419,
+      838,
+      568
+     ],
+     "bboxSize": [
+      225,
+      149
+     ],
+     "anchor": {
+      "x": 724.87,
+      "baselineY": 464.9,
+      "firstLineTopY": 419,
+      "bboxCenterX": 725.5,
+      "centerDeltaX": 0.63
+     },
+     "transformScale": {
+      "x": 0.779613,
+      "y": 0.778884
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "11th",
+       "sizePx": 59.88,
+       "lineHeightPx": 71.86,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "11th",
+       "mixed": true,
+       "role": "date-day"
+      },
+      {
+       "index": 1,
+       "text": "December",
+       "sizePx": 32.94,
+       "lineHeightPx": 38.0,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.18,
+       "textTransform": "uppercase",
+       "displayText": "DECEMBER",
+       "mixed": false,
+       "role": "date-month"
+      },
+      {
+       "index": 2,
+       "text": "2026",
+       "sizePx": 32.94,
+       "lineHeightPx": 34.0,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.14,
+       "textTransform": "none",
+       "displayText": "2026",
+       "mixed": false,
+       "role": "date-year"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "11",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 59.88,
+       "renderSizePx": 59.88,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.88443,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 0,
+       "text": "th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 59.88,
+       "renderSizePx": 34.91,
+       "renderRaisePx": 19.94,
+       "psdFontSize": 76.88443,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": true,
+       "fontFeatures": [],
+       "geometrySource": "measured:qa/textref",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 1,
+       "text": "December",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 32.94,
+       "renderSizePx": 32.94,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 42.28643,
+       "trackingEm": 0.18,
+       "letterSpacingPx": 5.929,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 2,
+       "text": "2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 32.94,
+       "renderSizePx": 32.94,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 42.28643,
+       "trackingEm": 0.14,
+       "letterSpacingPx": 4.612,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      }
+     ]
+    },
+    {
+     "id": "ampersand",
+     "layerName": "&",
+     "layerPath": "/logo/Group 7/Group 8/&",
+     "visible": true,
+     "text": "&",
+     "lines": [
+      "&"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 76.97,
+     "lineHeightPx": 92.37,
+     "trackingEm": 0.0,
+     "color": "#535514",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "&",
+     "mixed": false,
+     "bbox": [
+      514,
+      438,
+      565,
+      490
+     ],
+     "bboxSize": [
+      51,
+      52
+     ],
+     "anchor": {
+      "x": 536.46,
+      "baselineY": 488.26,
+      "firstLineTopY": 438,
+      "bboxCenterX": 539.5,
+      "centerDeltaX": 3.04
+     },
+     "transformScale": {
+      "x": 1.002076,
+      "y": 1.001139
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "&",
+       "sizePx": 76.97,
+       "lineHeightPx": 92.37,
+       "color": "#535514",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "uppercase",
+       "displayText": "&",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "&",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 76.97,
+       "renderSizePx": 76.97,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.88443,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#535514"
+      }
+     ]
+    },
+    {
+     "id": "venue",
+     "layerName": "Taj Mussoorie Foothills, Dehradun",
+     "layerPath": "/logo/Taj Mussoorie Foothills, Dehradun",
+     "visible": true,
+     "text": "Panchkula Bhawan, Salasar\nRajasthan, India",
+     "lines": [
+      "Panchkula Bhawan, Salasar",
+      "Rajasthan, India"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 45.83,
+     "lineHeightPx": 55.0,
+     "trackingEm": 0.0,
+     "color": "#b52645",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Panchkula Bhawan, Salasar\nRajasthan, India",
+     "mixed": false,
+     "bbox": [
+      310,
+      596,
+      768,
+      686
+     ],
+     "bboxSize": [
+      458,
+      90
+     ],
+     "anchor": {
+      "x": 540.29,
+      "baselineY": 629.66,
+      "firstLineTopY": 596,
+      "bboxCenterX": 539.0,
+      "centerDeltaX": -1.29
+     },
+     "transformScale": {
+      "x": 0.434525,
+      "y": 0.43475
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Panchkula Bhawan, Salasar",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Panchkula Bhawan, Salasar",
+       "mixed": false,
+       "role": "venue-name"
+      },
+      {
+       "index": 1,
+       "text": "Rajasthan, India",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#b52645",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Rajasthan, India",
+       "mixed": false,
+       "role": "venue-name"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Panchkula Bhawan, Salasar",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 105.42458,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      },
+      {
+       "line": 1,
+       "text": "Rajasthan, India",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 105.42458,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b52645"
+      }
+     ]
+    }
+   ]
+  },
+  "names": {
+   "source": "Names.psd",
+   "sourceDir": "groom",
+   "blocks": [
+    {
+     "id": "shloka",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।\nनिर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥",
+     "lines": [
+      "॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।",
+      "निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥"
+     ],
+     "fontFamily": "Tiro Devanagari Sanskrit",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Tiro Devanagari Sanskrit"
+     ],
+     "psdFonts": [],
+     "substitutedFonts": [],
+     "sizePx": 31.28,
+     "lineHeightPx": 42.32,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।\nनिर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥",
+     "mixed": false,
+     "bbox": [
+      220,
+      168,
+      860,
+      262
+     ],
+     "bboxSize": [
+      640,
+      94
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 202.0,
+      "firstLineTopY": 168,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।",
+       "sizePx": 31.28,
+       "lineHeightPx": 42.32,
+       "color": "#43450e",
+       "fontFamily": "Tiro Devanagari Sanskrit",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।",
+       "mixed": false
+      },
+      {
+       "index": 1,
+       "text": "निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥",
+       "sizePx": 31.28,
+       "lineHeightPx": 42.32,
+       "color": "#43450e",
+       "fontFamily": "Tiro Devanagari Sanskrit",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "॥ वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ।",
+       "fontFamily": "Tiro Devanagari Sanskrit",
+       "fontWeight": 400,
+       "psdFont": null,
+       "sizePx": 31.28,
+       "renderSizePx": 31.28,
+       "renderRaisePx": 0.0,
+       "psdFontSize": null,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      },
+      {
+       "line": 1,
+       "text": "निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ॥",
+       "fontFamily": "Tiro Devanagari Sanskrit",
+       "fontWeight": 400,
+       "psdFont": null,
+       "sizePx": 31.28,
+       "renderSizePx": 31.28,
+       "renderRaisePx": 0.0,
+       "psdFontSize": null,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ],
+     "lang": "sa"
+    },
+    {
+     "id": "invite-line",
+     "layerName": "With the blessings of The Almighty, we invite you to grace the ",
+     "layerPath": "/Names/With the blessings of The Almighty, we invite you to grace the ",
+     "visible": true,
+     "text": "With the blessings of Salasar Balaji,\nGods, Goddesses & our families",
+     "lines": [
+      "With the blessings of Salasar Balaji,",
+      "Gods, Goddesses & our families"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 41.67,
+     "lineHeightPx": 50.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "With the blessings of Salasar Balaji,\nGods, Goddesses & our families",
+     "mixed": false,
+     "bbox": [
+      111,
+      312,
+      969,
+      405
+     ],
+     "bboxSize": [
+      858,
+      93
+     ],
+     "anchor": {
+      "x": 540.59,
+      "baselineY": 342.55,
+      "firstLineTopY": 312,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": -0.59
+     },
+     "transformScale": {
+      "x": 0.489402,
+      "y": 0.489656
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "With the blessings of Salasar Balaji,",
+       "sizePx": 41.67,
+       "lineHeightPx": 50.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "With the blessings of Salasar Balaji,",
+       "mixed": false
+      },
+      {
+       "index": 1,
+       "text": "Gods, Goddesses & our families",
+       "sizePx": 41.67,
+       "lineHeightPx": 50.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Gods, Goddesses & our families",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "With the blessings of Salasar Balaji,",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 41.67,
+       "renderSizePx": 41.67,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 85.09376,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      },
+      {
+       "line": 1,
+       "text": "Gods, Goddesses & our families",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 41.67,
+       "renderSizePx": 41.67,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 85.09376,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "groom-name",
+     "layerName": "Shourya",
+     "layerPath": "/Names/Shourya",
+     "visible": true,
+     "text": "Dr. Shubham",
+     "lines": [
+      "Dr. Shubham"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "Rungkut"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 75.0,
+     "lineHeightPx": 76.19,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Dr. Shubham",
+     "mixed": false,
+     "bbox": [
+      361,
+      501,
+      718,
+      590
+     ],
+     "bboxSize": [
+      357,
+      89
+     ],
+     "anchor": {
+      "x": 549.75,
+      "baselineY": 575.96,
+      "firstLineTopY": 501,
+      "bboxCenterX": 539.5,
+      "centerDeltaX": -10.25
+     },
+     "transformScale": {
+      "x": 1.015377,
+      "y": 1.015903
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Dr. Shubham",
+       "sizePx": 75.0,
+       "lineHeightPx": 76.19,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Dr. Shubham",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Dr. Shubham",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 75.0,
+       "renderSizePx": 75.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 73.82594,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "groom-parents",
+     "layerName": "S/o Late Shri Sanjay Singhi & Smt. Vineeta Singhi Grand S/o Shr",
+     "layerPath": "/Names/S/o Late Shri Sanjay Singhi & Smt. Vineeta Singhi Grand S/o Shr",
+     "visible": true,
+     "text": "S/O Rajni Gupta and Anil Kumar Gupta",
+     "lines": [
+      "S/O Rajni Gupta and Anil Kumar Gupta"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 37.5,
+     "lineHeightPx": 45.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "S/O Rajni Gupta and Anil Kumar Gupta",
+     "mixed": false,
+     "bbox": [
+      173,
+      640,
+      907,
+      679
+     ],
+     "bboxSize": [
+      734,
+      39
+     ],
+     "anchor": {
+      "x": 538.88,
+      "baselineY": 667.71,
+      "firstLineTopY": 640,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.12
+     },
+     "transformScale": {
+      "x": 0.489402,
+      "y": 0.489656
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "S/O Rajni Gupta and Anil Kumar Gupta",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "S/O Rajni Gupta and Anil Kumar Gupta",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "S/O Rajni Gupta and Anil Kumar Gupta",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "ampersand",
+     "layerName": "&",
+     "layerPath": "/Names/&",
+     "visible": true,
+     "text": "with",
+     "lines": [
+      "with"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "Rungkut"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 43.68,
+     "lineHeightPx": 63.999599999999994,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "with",
+     "mixed": false,
+     "bbox": [
+      440,
+      729,
+      640,
+      773
+     ],
+     "bboxSize": [
+      200,
+      44
+     ],
+     "anchor": {
+      "x": 539.95,
+      "baselineY": 766.77,
+      "firstLineTopY": 729,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.05
+     },
+     "transformScale": {
+      "x": 0.85291668,
+      "y": 0.85335852
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "with",
+       "sizePx": 43.68,
+       "lineHeightPx": 63.999599999999994,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "with",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "with",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 43.68,
+       "renderSizePx": 43.68,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 62.0137896,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "bride-name",
+     "layerName": "Muskan",
+     "layerPath": "/Names/Muskan",
+     "visible": true,
+     "text": "Dr. Nandini",
+     "lines": [
+      "Dr. Nandini"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "Rungkut"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 75.0,
+     "lineHeightPx": 76.19,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Dr. Nandini",
+     "mixed": false,
+     "bbox": [
+      371,
+      823,
+      709,
+      919
+     ],
+     "bboxSize": [
+      338,
+      96
+     ],
+     "anchor": {
+      "x": 558.26,
+      "baselineY": 915.56,
+      "firstLineTopY": 823,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": -18.26
+     },
+     "transformScale": {
+      "x": 1.015377,
+      "y": 1.015903
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Dr. Nandini",
+       "sizePx": 75.0,
+       "lineHeightPx": 76.19,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Dr. Nandini",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Dr. Nandini",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 75.0,
+       "renderSizePx": 75.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 73.82594,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "bride-parents",
+     "layerName": "D/o Shri Sanjeev Hari & Smt. Anita Hari Grand D/o Late Shri Raj",
+     "layerPath": "/Names/D/o Shri Sanjeev Hari & Smt. Anita Hari Grand D/o Late Shri Raj",
+     "visible": true,
+     "text": "D/O Late Sunita Saini and Sohan Lal Tak",
+     "lines": [
+      "D/O Late Sunita Saini and Sohan Lal Tak"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 37.5,
+     "lineHeightPx": 45.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "D/O Late Sunita Saini and Sohan Lal Tak",
+     "mixed": false,
+     "bbox": [
+      237,
+      969,
+      842,
+      998
+     ],
+     "bboxSize": [
+      605,
+      29
+     ],
+     "anchor": {
+      "x": 539.52,
+      "baselineY": 997.3,
+      "firstLineTopY": 969,
+      "bboxCenterX": 539.5,
+      "centerDeltaX": -0.02
+     },
+     "transformScale": {
+      "x": 0.489402,
+      "y": 0.489656
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "D/O Late Sunita Saini and Sohan Lal Tak",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "D/O Late Sunita Saini and Sohan Lal Tak",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "D/O Late Sunita Saini and Sohan Lal Tak",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    }
+   ]
+  },
+  "mayra-mehendi": {
+   "source": "Mayra & Mehendi.psd",
+   "sourceDir": "fallback",
+   "blocks": [
+    {
+     "id": "date-day",
+     "layerName": "10th",
+     "layerPath": "/text/10th",
+     "visible": true,
+     "text": "10th",
+     "lines": [
+      "10th"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 93.46,
+     "lineHeightPx": 112.15,
+     "trackingEm": 0.0,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "10th",
+     "mixed": false,
+     "bbox": [
+      486,
+      535,
+      594,
+      608
+     ],
+     "bboxSize": [
+      108,
+      73
+     ],
+     "anchor": {
+      "x": 538.41,
+      "baselineY": 606.27,
+      "firstLineTopY": 535,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.59
+     },
+     "transformScale": {
+      "x": 0.803705,
+      "y": 0.802906
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "10th",
+       "sizePx": 93.46,
+       "lineHeightPx": 112.15,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "10th",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "10th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 93.46,
+       "renderSizePx": 93.46,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 116.40147,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    },
+    {
+     "id": "date-month",
+     "layerName": "November, 2026",
+     "layerPath": "/text/November, 2026",
+     "visible": true,
+     "text": "December, 2026",
+     "lines": [
+      "December, 2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 45.83,
+     "lineHeightPx": 55.0,
+     "trackingEm": 0.06,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "DECEMBER, 2026",
+     "mixed": false,
+     "bbox": [
+      345,
+      618,
+      735,
+      657
+     ],
+     "bboxSize": [
+      390,
+      39
+     ],
+     "anchor": {
+      "x": 538.8,
+      "baselineY": 647.56,
+      "firstLineTopY": 618,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.2
+     },
+     "transformScale": {
+      "x": 0.62901,
+      "y": 0.628385
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "December, 2026",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.06,
+       "textTransform": "uppercase",
+       "displayText": "December, 2026",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "December, 2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 72.93835,
+       "trackingEm": 0.06,
+       "letterSpacingPx": 2.75,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    },
+    {
+     "id": "event-title",
+     "layerName": "Mayra & Mehendi",
+     "layerPath": "/text/Mayra & Mehendi",
+     "visible": true,
+     "text": "Mehndi Ki Mehfil",
+     "lines": [
+      "Mehndi Ki Mehfil"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 84.3304,
+     "lineHeightPx": 101.2,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Mehndi Ki Mehfil",
+     "mixed": false,
+     "bbox": [
+      238,
+      388,
+      842,
+      495
+     ],
+     "bboxSize": [
+      604,
+      107
+     ],
+     "anchor": {
+      "x": 542.1,
+      "baselineY": 462.26,
+      "firstLineTopY": 388,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": -2.1
+     },
+     "transformScale": {
+      "x": 0.86182184,
+      "y": 0.86190192
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Mehndi Ki Mehfil",
+       "sizePx": 84.3304,
+       "lineHeightPx": 101.2,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Mehndi Ki Mehfil",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Mehndi Ki Mehfil",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 84.3304,
+       "renderSizePx": 84.3304,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 86.10413679999999,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "times",
+     "layerName": "11:00 AM Onwards Followed by Lunch",
+     "layerPath": "/text/11:00 AM Onwards Followed by Lunch",
+     "visible": true,
+     "text": "Time 11:15 AM Onwards",
+     "lines": [
+      "Time 11:15 AM Onwards"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 50.0,
+     "lineHeightPx": 60.0,
+     "trackingEm": 0.0,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Time 11:15 AM Onwards",
+     "mixed": false,
+     "bbox": [
+      352,
+      693,
+      728,
+      741
+     ],
+     "bboxSize": [
+      376,
+      48
+     ],
+     "anchor": {
+      "x": 540.14,
+      "baselineY": 729.9,
+      "firstLineTopY": 693,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": -0.14
+     },
+     "transformScale": {
+      "x": 1.053461,
+      "y": 1.052975
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Time 11:15 AM Onwards",
+       "sizePx": 50.0,
+       "lineHeightPx": 60.0,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Time 11:15 AM Onwards",
+       "mixed": false,
+       "role": "time"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Time 11:15 AM Onwards",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 50.0,
+       "renderSizePx": 50.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    },
+    {
+     "id": "venue",
+     "layerName": "Venue The Woods Lawn",
+     "layerPath": "/text/Venue The Woods Lawn",
+     "visible": false,
+     "text": "Venue\nUtsav Resort",
+     "lines": [
+      "Venue",
+      "Utsav Resort"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 37.5,
+     "lineHeightPx": 45.0,
+     "trackingEm": 0.0,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Venue\nUtsav Resort",
+     "mixed": true,
+     "bbox": [
+      373,
+      538.67,
+      708,
+      623.67
+     ],
+     "bboxSize": [
+      335,
+      85
+     ],
+     "anchor": {
+      "x": 539.65,
+      "baselineY": 562.73,
+      "firstLineTopY": 538.67,
+      "bboxCenterX": 540.5,
+      "centerDeltaX": 0.85
+     },
+     "transformScale": {
+      "x": 1.053461,
+      "y": 1.052975
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Venue",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Venue",
+       "mixed": false,
+       "role": "venue-label"
+      },
+      {
+       "index": 1,
+       "text": "Utsav Resort",
+       "sizePx": 50.0,
+       "lineHeightPx": 60.0,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Utsav Resort",
+       "mixed": false,
+       "role": "venue-name"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Venue",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 35.6134,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      },
+      {
+       "line": 1,
+       "text": "Utsav Resort",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 50.0,
+       "renderSizePx": 50.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    }
+   ]
+  },
+  "cocktail": {
+   "source": "Cocktail.psd",
+   "sourceDir": "groom",
+   "blocks": [
+    {
+     "id": "date-day",
+     "layerName": "10th",
+     "layerPath": "/text/10th",
+     "visible": true,
+     "text": "10th",
+     "lines": [
+      "10th"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 93.46,
+     "lineHeightPx": 112.15,
+     "trackingEm": 0.0,
+     "color": "#ffffff",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "10th",
+     "mixed": false,
+     "bbox": [
+      318,
+      803.4,
+      426,
+      876.4
+     ],
+     "bboxSize": [
+      108,
+      73.0
+     ],
+     "anchor": {
+      "x": 370.41,
+      "baselineY": 874.67,
+      "firstLineTopY": 803.4,
+      "bboxCenterX": 372.0,
+      "centerDeltaX": 1.59
+     },
+     "transformScale": {
+      "x": 0.803705,
+      "y": 0.802906
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "10th",
+       "sizePx": 93.46,
+       "lineHeightPx": 112.15,
+       "color": "#ffffff",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "10th",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "10th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 93.46,
+       "renderSizePx": 93.46,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 116.40147,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      }
+     ]
+    },
+    {
+     "id": "date-month",
+     "layerName": "November, 2026",
+     "layerPath": "/text/November, 2026",
+     "visible": true,
+     "text": "December, 2026",
+     "lines": [
+      "December, 2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 45.83,
+     "lineHeightPx": 55.0,
+     "trackingEm": 0.06,
+     "color": "#ffffff",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "DECEMBER, 2026",
+     "mixed": false,
+     "bbox": [
+      178,
+      886.4,
+      568,
+      925.4
+     ],
+     "bboxSize": [
+      390,
+      39.0
+     ],
+     "anchor": {
+      "x": 371.8,
+      "baselineY": 915.9599999999999,
+      "firstLineTopY": 886.4,
+      "bboxCenterX": 373.0,
+      "centerDeltaX": 1.2
+     },
+     "transformScale": {
+      "x": 0.62901,
+      "y": 0.628385
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "December, 2026",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#ffffff",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.06,
+       "textTransform": "uppercase",
+       "displayText": "December, 2026",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "December, 2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 72.93835,
+       "trackingEm": 0.06,
+       "letterSpacingPx": 2.75,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      }
+     ]
+    },
+    {
+     "id": "event-title",
+     "layerName": "Milni & Sangeet",
+     "layerPath": "/text/Milni & Sangeet",
+     "visible": true,
+     "text": "Sangeet\nKi\nShaam",
+     "lines": [
+      "Sangeet",
+      "Ki",
+      "Shaam"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 73.92,
+     "lineHeightPx": 80.96,
+     "trackingEm": 0.0,
+     "color": "#ffffff",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Sangeet\nKi\nShaam",
+     "mixed": false,
+     "bbox": [
+      -49,
+      458,
+      505,
+      763.4
+     ],
+     "bboxSize": [
+      554,
+      305.4
+     ],
+     "anchor": {
+      "x": 233.10000000000002,
+      "baselineY": 529.4,
+      "firstLineTopY": 458,
+      "bboxCenterX": 228.0,
+      "centerDeltaX": -5.1
+     },
+     "transformScale": {
+      "x": 0.86182184,
+      "y": 0.86190192
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Sangeet",
+       "sizePx": 73.92,
+       "lineHeightPx": 80.96,
+       "color": "#ffffff",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Sangeet",
+       "mixed": false
+      },
+      {
+       "index": 1,
+       "text": "Ki",
+       "sizePx": 73.92,
+       "lineHeightPx": 80.96,
+       "color": "#ffffff",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Ki",
+       "mixed": false
+      },
+      {
+       "index": 2,
+       "text": "Shaam",
+       "sizePx": 73.92,
+       "lineHeightPx": 80.96,
+       "color": "#ffffff",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Shaam",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Sangeet",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 73.92,
+       "renderSizePx": 73.92,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 86.10413679999999,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      },
+      {
+       "line": 1,
+       "text": "Ki",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 73.92,
+       "renderSizePx": 73.92,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 86.10413679999999,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      },
+      {
+       "line": 2,
+       "text": "Shaam",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 73.92,
+       "renderSizePx": 73.92,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 86.10413679999999,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      }
+     ]
+    },
+    {
+     "id": "times",
+     "layerName": "6:00 PM Onwards Followed by Dinner",
+     "layerPath": "/text/6:00 PM Onwards Followed by Dinner",
+     "visible": true,
+     "text": "Time 7:15 PM Onwards",
+     "lines": [
+      "Time 7:15 PM Onwards"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 50.0,
+     "lineHeightPx": 60.0,
+     "trackingEm": 0.0,
+     "color": "#ffffff",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Time 7:15 PM Onwards",
+     "mixed": false,
+     "bbox": [
+      195,
+      961.4,
+      549,
+      1009.4
+     ],
+     "bboxSize": [
+      354,
+      48.0
+     ],
+     "anchor": {
+      "x": 372.14,
+      "baselineY": 998.3,
+      "firstLineTopY": 961.4,
+      "bboxCenterX": 372.0,
+      "centerDeltaX": -0.14
+     },
+     "transformScale": {
+      "x": 1.053461,
+      "y": 1.052975
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Time 7:15 PM Onwards",
+       "sizePx": 50.0,
+       "lineHeightPx": 60.0,
+       "color": "#ffffff",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Time 7:15 PM Onwards",
+       "mixed": false,
+       "role": "time"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Time 7:15 PM Onwards",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 50.0,
+       "renderSizePx": 50.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      }
+     ]
+    },
+    {
+     "id": "venue",
+     "layerName": "Venue Monal Ballroom",
+     "layerPath": "/text/Venue Monal Ballroom",
+     "visible": false,
+     "text": "Venue\nUtsav Hall",
+     "lines": [
+      "Venue",
+      "Utsav Hall"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 37.5,
+     "lineHeightPx": 45.0,
+     "trackingEm": 0.0,
+     "color": "#ffffff",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Venue\nUtsav Hall",
+     "mixed": true,
+     "bbox": [
+      213,
+      1015.67,
+      533,
+      1100.67
+     ],
+     "bboxSize": [
+      320,
+      85
+     ],
+     "anchor": {
+      "x": 372.65,
+      "baselineY": 1039.73,
+      "firstLineTopY": 1015.67,
+      "bboxCenterX": 373.0,
+      "centerDeltaX": 0.35
+     },
+     "transformScale": {
+      "x": 1.053461,
+      "y": 1.052975
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Venue",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#ffffff",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Venue",
+       "mixed": false,
+       "role": "venue-label"
+      },
+      {
+       "index": 1,
+       "text": "Utsav Hall",
+       "sizePx": 50.0,
+       "lineHeightPx": 60.0,
+       "color": "#ffffff",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Utsav Hall",
+       "mixed": false,
+       "role": "venue-name"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Venue",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 35.6134,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      },
+      {
+       "line": 1,
+       "text": "Utsav Hall",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 50.0,
+       "renderSizePx": 50.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      }
+     ]
+    }
+   ]
+  },
+  "haldi": {
+   "source": "Haldi.psd",
+   "sourceDir": "groom",
+   "blocks": [
+    {
+     "id": "date-day",
+     "layerName": "11th",
+     "layerPath": "/text/11th",
+     "visible": true,
+     "text": "11th",
+     "lines": [
+      "11th"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 93.46,
+     "lineHeightPx": 112.15,
+     "trackingEm": 0.0,
+     "color": "#475224",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "11th",
+     "mixed": false,
+     "bbox": [
+      491,
+      616,
+      589,
+      687
+     ],
+     "bboxSize": [
+      98,
+      71
+     ],
+     "anchor": {
+      "x": 538.41,
+      "baselineY": 687.27,
+      "firstLineTopY": 616,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.59
+     },
+     "transformScale": {
+      "x": 0.803705,
+      "y": 0.802906
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "11th",
+       "sizePx": 93.46,
+       "lineHeightPx": 112.15,
+       "color": "#475224",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "11th",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "11th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 93.46,
+       "renderSizePx": 93.46,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 116.40147,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#475224"
+      }
+     ]
+    },
+    {
+     "id": "date-month",
+     "layerName": "November, 2026",
+     "layerPath": "/text/November, 2026",
+     "visible": true,
+     "text": "December, 2026",
+     "lines": [
+      "December, 2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 45.83,
+     "lineHeightPx": 55.0,
+     "trackingEm": 0.06,
+     "color": "#475224",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "DECEMBER, 2026",
+     "mixed": false,
+     "bbox": [
+      345,
+      697,
+      735,
+      736
+     ],
+     "bboxSize": [
+      390,
+      39
+     ],
+     "anchor": {
+      "x": 538.8,
+      "baselineY": 726.56,
+      "firstLineTopY": 697,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.2
+     },
+     "transformScale": {
+      "x": 0.62901,
+      "y": 0.628385
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "December, 2026",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#475224",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.06,
+       "textTransform": "uppercase",
+       "displayText": "December, 2026",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "December, 2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 72.93835,
+       "trackingEm": 0.06,
+       "letterSpacingPx": 2.75,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#475224"
+      }
+     ]
+    },
+    {
+     "id": "event-title",
+     "layerName": "Haldi Ceremony",
+     "layerPath": "/text/Haldi Ceremony",
+     "visible": true,
+     "text": "Phoolon Wali Haldi",
+     "lines": [
+      "Phoolon Wali Haldi"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 84.3304,
+     "lineHeightPx": 101.2,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Phoolon Wali Haldi",
+     "mixed": false,
+     "bbox": [
+      294.5,
+      468,
+      785.5,
+      576
+     ],
+     "bboxSize": [
+      491.0,
+      108
+     ],
+     "anchor": {
+      "x": 549.6,
+      "baselineY": 543.26,
+      "firstLineTopY": 468,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": -9.6
+     },
+     "transformScale": {
+      "x": 0.86182184,
+      "y": 0.86190192
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Phoolon Wali Haldi",
+       "sizePx": 84.3304,
+       "lineHeightPx": 101.2,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Phoolon Wali Haldi",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Phoolon Wali Haldi",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 84.3304,
+       "renderSizePx": 84.3304,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 86.10413679999999,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "times",
+     "layerName": "9:45 AM",
+     "layerPath": "/text/9:45 AM",
+     "visible": true,
+     "text": "Time 11:15 AM Onwards",
+     "lines": [
+      "Time 11:15 AM Onwards"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 50.0,
+     "lineHeightPx": 60.0,
+     "trackingEm": 0.0,
+     "color": "#475224",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Time 11:15 AM Onwards",
+     "mixed": false,
+     "bbox": [
+      456,
+      772,
+      624,
+      806
+     ],
+     "bboxSize": [
+      168,
+      34
+     ],
+     "anchor": {
+      "x": 539.14,
+      "baselineY": 804.9,
+      "firstLineTopY": 772,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.86
+     },
+     "transformScale": {
+      "x": 1.053461,
+      "y": 1.052975
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Time 11:15 AM Onwards",
+       "sizePx": 50.0,
+       "lineHeightPx": 60.0,
+       "color": "#475224",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Time 11:15 AM Onwards",
+       "mixed": false,
+       "role": "time"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Time 11:15 AM Onwards",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 50.0,
+       "renderSizePx": 50.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#475224"
+      }
+     ]
+    },
+    {
+     "id": "venue",
+     "layerName": "Venue The Deck & Vista Restaurant",
+     "layerPath": "/text/Venue The Deck & Vista Restaurant",
+     "visible": false,
+     "text": "Venue\nUtsav Resort",
+     "lines": [
+      "Venue",
+      "Utsav Resort"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 37.5,
+     "lineHeightPx": 45.0,
+     "trackingEm": 0.0,
+     "color": "#475224",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Venue\nUtsav Resort",
+     "mixed": true,
+     "bbox": [
+      256,
+      776,
+      826,
+      861
+     ],
+     "bboxSize": [
+      570,
+      85
+     ],
+     "anchor": {
+      "x": 539.65,
+      "baselineY": 800.06,
+      "firstLineTopY": 776,
+      "bboxCenterX": 541.0,
+      "centerDeltaX": 1.35
+     },
+     "transformScale": {
+      "x": 1.053461,
+      "y": 1.052975
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Venue",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#475224",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Venue",
+       "mixed": false,
+       "role": "venue-label"
+      },
+      {
+       "index": 1,
+       "text": "Utsav Resort",
+       "sizePx": 50.0,
+       "lineHeightPx": 60.0,
+       "color": "#475224",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Utsav Resort",
+       "mixed": false,
+       "role": "venue-name"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Venue",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 35.6134,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#475224"
+      },
+      {
+       "line": 1,
+       "text": "Utsav Resort",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 50.0,
+       "renderSizePx": 50.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#475224"
+      }
+     ]
+    }
+   ]
+  },
+  "wedding": {
+   "source": "Wedding.psd",
+   "sourceDir": "groom",
+   "blocks": [
+    {
+     "id": "date-day",
+     "layerName": "11th",
+     "layerPath": "/text/11th",
+     "visible": true,
+     "text": "11th",
+     "lines": [
+      "11th"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 93.46,
+     "lineHeightPx": 112.15,
+     "trackingEm": 0.0,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "11th",
+     "mixed": false,
+     "bbox": [
+      491,
+      661.62572,
+      589,
+      732.62572
+     ],
+     "bboxSize": [
+      98,
+      71.0
+     ],
+     "anchor": {
+      "x": 538.41,
+      "baselineY": 732.89572,
+      "firstLineTopY": 661.62572,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.59
+     },
+     "transformScale": {
+      "x": 0.803705,
+      "y": 0.802906
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "11th",
+       "sizePx": 93.46,
+       "lineHeightPx": 112.15,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "11th",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "11th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 93.46,
+       "renderSizePx": 93.46,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 116.40147,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    },
+    {
+     "id": "date-month",
+     "layerName": "November, 2026",
+     "layerPath": "/text/November, 2026",
+     "visible": true,
+     "text": "December, 2026",
+     "lines": [
+      "December, 2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 45.83,
+     "lineHeightPx": 55.0,
+     "trackingEm": 0.06,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "DECEMBER, 2026",
+     "mixed": false,
+     "bbox": [
+      345,
+      742.62572,
+      735,
+      781.62572
+     ],
+     "bboxSize": [
+      390,
+      39.0
+     ],
+     "anchor": {
+      "x": 538.8,
+      "baselineY": 772.18572,
+      "firstLineTopY": 742.62572,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 1.2
+     },
+     "transformScale": {
+      "x": 0.62901,
+      "y": 0.628385
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "December, 2026",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.06,
+       "textTransform": "uppercase",
+       "displayText": "December, 2026",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "December, 2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 72.93835,
+       "trackingEm": 0.06,
+       "letterSpacingPx": 2.75,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    },
+    {
+     "id": "event-title",
+     "layerName": "Wedding Ceremony",
+     "layerPath": "/text/Wedding Ceremony",
+     "visible": true,
+     "text": "Varmala –\nशुभ मिलन",
+     "lines": [
+      "Varmala –",
+      "शुभ मिलन"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut",
+      "Tiro Devanagari Sanskrit"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 83.8112,
+     "lineHeightPx": 100.57520000000001,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Varmala –\nशुभ मिलन",
+     "mixed": false,
+     "bbox": [
+      265.5,
+      388,
+      814.5,
+      621.62572
+     ],
+     "bboxSize": [
+      549.0,
+      233.62572
+     ],
+     "anchor": {
+      "x": 546.6,
+      "baselineY": 468.954,
+      "firstLineTopY": 388,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": -6.6
+     },
+     "transformScale": {
+      "x": 0.86182184,
+      "y": 0.86190192
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Varmala –",
+       "sizePx": 83.8112,
+       "lineHeightPx": 100.57520000000001,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Varmala –",
+       "mixed": false
+      },
+      {
+       "index": 1,
+       "text": "शुभ मिलन",
+       "sizePx": 65.372736,
+       "lineHeightPx": 88.2531936,
+       "color": "#b13151",
+       "fontFamily": "Tiro Devanagari Sanskrit",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "शुभ मिलन",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Varmala –",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 83.8112,
+       "renderSizePx": 83.8112,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 85.57508080000001,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b13151"
+      },
+      {
+       "line": 1,
+       "text": "शुभ मिलन",
+       "fontFamily": "Tiro Devanagari Sanskrit",
+       "fontWeight": 400,
+       "psdFont": "TiroDevanagariSanskrit-Regular",
+       "sizePx": 65.372736,
+       "renderSizePx": 65.372736,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 85.57508080000001,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "times",
+     "layerName": "Sehrabandi – 2:00 PM Hotel Lobby Baraat Assembly – 3:00 PM Hote",
+     "layerPath": "/text/Sehrabandi – 2:00 PM Hotel Lobby Baraat Assembly – 3:00 PM Hote",
+     "visible": true,
+     "text": "Time 8:15 PM Onwards",
+     "lines": [
+      "Time 8:15 PM Onwards"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.76,
+     "lineHeightPx": 51.32,
+     "trackingEm": 0.0,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Time 8:15 PM Onwards",
+     "mixed": false,
+     "bbox": [
+      309.5,
+      817.62572,
+      770.5,
+      991.62572
+     ],
+     "bboxSize": [
+      461.0,
+      174.0
+     ],
+     "anchor": {
+      "x": 539.64,
+      "baselineY": 848.64572,
+      "firstLineTopY": 817.62572,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.36
+     },
+     "transformScale": {
+      "x": 0.901025,
+      "y": 0.900609
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Time 8:15 PM Onwards",
+       "sizePx": 42.76,
+       "lineHeightPx": 51.32,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Time 8:15 PM Onwards",
+       "mixed": false,
+       "role": "time"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Time 8:15 PM Onwards",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.76,
+       "renderSizePx": 42.76,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "psd",
+       "textTransform": "none",
+       "ligatures": false,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    }
+   ]
+  },
+  "last": {
+   "source": "Last Slide.psd",
+   "sourceDir": "groom",
+   "blocks": [
+    {
+     "id": "head-1",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "We await your blessings",
+     "lines": [
+      "We await your blessings"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "Rungkut"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 48.0,
+     "lineHeightPx": 48.0,
+     "trackingEm": 0.0,
+     "color": "#a92a46",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "We await your blessings",
+     "mixed": false,
+     "bbox": [
+      140,
+      581.0,
+      940,
+      633.0
+     ],
+     "bboxSize": [
+      800,
+      52.0
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 619.0,
+      "firstLineTopY": 581.0,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "We await your blessings",
+       "sizePx": 48.0,
+       "lineHeightPx": 48.0,
+       "color": "#a92a46",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "We await your blessings",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "We await your blessings",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 48.0,
+       "renderSizePx": 48.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 50.12165,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#a92a46"
+      }
+     ],
+     "sizeScale": 0.85
+    },
+    {
+     "id": "names-1",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "on",
+     "lines": [
+      "on"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-Medium"
+     ],
+     "substitutedFonts": [
+      "CormorantGaramond-Medium"
+     ],
+     "sizePx": 36.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#494b00",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "on",
+     "mixed": false,
+     "bbox": [
+      140,
+      653.0,
+      940,
+      753.0
+     ],
+     "bboxSize": [
+      800,
+      100.0
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 685.0,
+      "firstLineTopY": 653.0,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "on",
+       "sizePx": 40.0,
+       "lineHeightPx": 56.0,
+       "color": "#494b00",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "uppercase",
+       "displayText": "on",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "on",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 400,
+       "psdFont": "CormorantGaramond-Medium",
+       "sizePx": 40.0,
+       "renderSizePx": 40.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 160.25122,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "authored",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#494b00"
+      }
+     ]
+    },
+    {
+     "id": "head-2",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "#NandiniकाShubhमिलन",
+     "lines": [
+      "#NandiniकाShubhमिलन"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "Rungkut"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 48.0,
+     "lineHeightPx": 48.0,
+     "trackingEm": 0.0,
+     "color": "#a92a46",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "#NandiniकाShubhमिलन",
+     "mixed": false,
+     "bbox": [
+      140,
+      767.0,
+      940,
+      819.0
+     ],
+     "bboxSize": [
+      800,
+      52.0
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 805.0,
+      "firstLineTopY": 767.0,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "#NandiniकाShubhमिलन",
+       "sizePx": 48.0,
+       "lineHeightPx": 48.0,
+       "color": "#a92a46",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "#NandiniकाShubhमिलन",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "#NandiniकाShubhमिलन",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 48.0,
+       "renderSizePx": 48.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 50.12165,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#a92a46"
+      }
+     ],
+     "sizeScale": 0.85
+    },
+    {
+     "id": "names-2",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "Bhavya, Mayra, Chirag, Ruhi",
+     "lines": [
+      "Bhavya, Mayra, Chirag, Ruhi"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-Medium"
+     ],
+     "substitutedFonts": [
+      "CormorantGaramond-Medium"
+     ],
+     "sizePx": 40.0,
+     "lineHeightPx": 56.0,
+     "trackingEm": 0.0,
+     "color": "#494b00",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "Bhavya, Mayra, Chirag, Ruhi",
+     "mixed": false,
+     "bbox": [
+      140,
+      610,
+      940,
+      654
+     ],
+     "bboxSize": [
+      800,
+      44
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 642.0,
+      "firstLineTopY": 610,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Bhavya, Mayra, Chirag, Ruhi",
+       "sizePx": 40.0,
+       "lineHeightPx": 56.0,
+       "color": "#494b00",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "uppercase",
+       "displayText": "Bhavya, Mayra, Chirag, Ruhi",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Bhavya, Mayra, Chirag, Ruhi",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 400,
+       "psdFont": "CormorantGaramond-Medium",
+       "sizePx": 40.0,
+       "renderSizePx": 40.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 160.25122,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "authored",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#494b00"
+      }
+     ]
+    }
+   ]
+  },
+  "compliments": {
+   "source": null,
+   "sourceDir": "authored (tools/apply_overrides.py)",
+   "blocks": [
+    {
+     "id": "title",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "With love from our families",
+     "lines": [
+      "With love from our families"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 34.0,
+     "lineHeightPx": 40.0,
+     "trackingEm": 0.0,
+     "color": "#222222",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "WITH LOVE FROM OUR FAMILIES",
+     "mixed": false,
+     "bbox": [
+      90,
+      88,
+      990,
+      136.0
+     ],
+     "bboxSize": [
+      900,
+      48.0
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 116.9,
+      "firstLineTopY": 88,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "With love from our families",
+       "sizePx": 34.0,
+       "lineHeightPx": 40.0,
+       "color": "#222222",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.1,
+       "textTransform": "uppercase",
+       "displayText": "WITH LOVE FROM OUR FAMILIES",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "With love from our families",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 34.0,
+       "renderSizePx": 34.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 97.24441,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 3.4000000000000004,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#222222"
+      }
+     ]
+    },
+    {
+     "id": "name-1",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      436,
+      940,
+      483
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 470.0,
+      "firstLineTopY": 436,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "name-2",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      502,
+      940,
+      549
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 536.0,
+      "firstLineTopY": 502,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "name-3",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      568,
+      940,
+      615
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 602.0,
+      "firstLineTopY": 568,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "name-4",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      634,
+      940,
+      681
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 668.0,
+      "firstLineTopY": 634,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "name-5",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      700,
+      940,
+      747
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 734.0,
+      "firstLineTopY": 700,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "name-6",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      766,
+      940,
+      813
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 800.0,
+      "firstLineTopY": 766,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    },
+    {
+     "id": "name-7",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "",
+     "lines": [],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 42.0,
+     "lineHeightPx": 42.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "",
+     "mixed": false,
+     "bbox": [
+      140,
+      832,
+      940,
+      879
+     ],
+     "bboxSize": [
+      800,
+      47
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 866.0,
+      "firstLineTopY": 832,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "",
+       "sizePx": 42.0,
+       "lineHeightPx": 42.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 42.0,
+       "renderSizePx": 42.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 76.58438,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    }
+   ]
+  },
+  "map": {
+   "source": null,
+   "sourceDir": "authored (tools/apply_overrides.py)",
+   "blocks": [
+    {
+     "id": "title",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "Where We Celebrate",
+     "lines": [
+      "Where We Celebrate"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 64.7632,
+     "lineHeightPx": 77.7172,
+     "trackingEm": 0.0,
+     "color": "#b13151",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Where We Celebrate",
+     "mixed": false,
+     "bbox": [
+      140,
+      108,
+      940,
+      213
+     ],
+     "bboxSize": [
+      800,
+      105
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 184.0,
+      "firstLineTopY": 108,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Where We Celebrate",
+       "sizePx": 64.7632,
+       "lineHeightPx": 77.7172,
+       "color": "#b13151",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Where We Celebrate",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Where We Celebrate",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 64.7632,
+       "renderSizePx": 64.7632,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 66.12619880000001,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#b13151"
+      }
+     ]
+    },
+    {
+     "id": "venue-name",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "Utsav Resort",
+     "lines": [
+      "Utsav Resort"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 58.0,
+     "lineHeightPx": 70.0,
+     "trackingEm": 0.0,
+     "color": "#566133",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Utsav Resort",
+     "mixed": true,
+     "bbox": [
+      140,
+      304,
+      940,
+      367
+     ],
+     "bboxSize": [
+      800,
+      63
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 350.0,
+      "firstLineTopY": 304,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Utsav Resort",
+       "sizePx": 58.0,
+       "lineHeightPx": 70.0,
+       "color": "#566133",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Utsav Resort",
+       "mixed": true,
+       "role": "time"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Utsav Resort",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 58.0,
+       "renderSizePx": 58.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#566133"
+      }
+     ]
+    },
+    {
+     "id": "address",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "117/2, Raver Road,\nBurhanpur, Madhya Pradesh 450331",
+     "lines": [
+      "117/2, Raver Road,",
+      "Burhanpur, Madhya Pradesh 450331"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 37.5,
+     "lineHeightPx": 45.0,
+     "trackingEm": 0.0,
+     "color": "#43450e",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "117/2, Raver Road,\nBurhanpur, Madhya Pradesh 450331",
+     "mixed": true,
+     "bbox": [
+      140,
+      378,
+      940,
+      464
+     ],
+     "bboxSize": [
+      800,
+      86
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 408.0,
+      "firstLineTopY": 378,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "117/2, Raver Road,",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "117/2, Raver Road,",
+       "mixed": true,
+       "role": "time"
+      },
+      {
+       "index": 1,
+       "text": "Burhanpur, Madhya Pradesh 450331",
+       "sizePx": 37.5,
+       "lineHeightPx": 45.0,
+       "color": "#43450e",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Burhanpur, Madhya Pradesh 450331",
+       "mixed": true,
+       "role": "time"
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "117/2, Raver Road,",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      },
+      {
+       "line": 1,
+       "text": "Burhanpur, Madhya Pradesh 450331",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 37.5,
+       "renderSizePx": 37.5,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 47.48453,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#43450e"
+      }
+     ]
+    }
+   ]
+  },
+  "reception": {
+   "source": null,
+   "sourceDir": "authored (tools/build_anoop.py)",
+   "blocks": [
+    {
+     "id": "date-day",
+     "layerName": "11th",
+     "layerPath": "/text/11th",
+     "visible": true,
+     "text": "13th",
+     "lines": [
+      "13th"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 93.46,
+     "lineHeightPx": 112.15,
+     "trackingEm": 0.0,
+     "color": "#f7e6c8",
+     "textAlign": "center",
+     "textTransform": "mixed",
+     "outline": null,
+     "displayText": "13th",
+     "mixed": false,
+     "bbox": [
+      390,
+      534,
+      690,
+      605
+     ],
+     "bboxSize": [
+      300,
+      71
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 605,
+      "firstLineTopY": 534,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": {
+      "x": 0.803705,
+      "y": 0.802906
+     },
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "13th",
+       "sizePx": 93.46,
+       "lineHeightPx": 112.15,
+       "color": "#f7e6c8",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "mixed",
+       "displayText": "13th",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "13th",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 93.46,
+       "renderSizePx": 93.46,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 116.40147,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "psd",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#f7e6c8"
+      }
+     ]
+    },
+    {
+     "id": "date-month",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "December, 2026",
+     "lines": [
+      "December, 2026"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 45.83,
+     "lineHeightPx": 55.0,
+     "trackingEm": 0.06,
+     "color": "#f7e6c8",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "DECEMBER, 2026",
+     "mixed": false,
+     "bbox": [
+      100,
+      615,
+      980,
+      666
+     ],
+     "bboxSize": [
+      880,
+      51
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 652.0,
+      "firstLineTopY": 615,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "December, 2026",
+       "sizePx": 45.83,
+       "lineHeightPx": 55.0,
+       "color": "#f7e6c8",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.06,
+       "textTransform": "uppercase",
+       "displayText": "December, 2026",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "December, 2026",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 45.83,
+       "renderSizePx": 45.83,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 72.93835,
+       "trackingEm": 0.06,
+       "letterSpacingPx": 2.75,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [
+        "case"
+       ],
+       "geometrySource": "authored",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#f7e6c8"
+      }
+     ]
+    },
+    {
+     "id": "event-title",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "Reception",
+     "lines": [
+      "Reception"
+     ],
+     "fontFamily": "Rungkut",
+     "fontWeight": 400,
+     "fontFamilies": [
+      "Rungkut"
+     ],
+     "psdFonts": [
+      "HelloBrideScript-Regular"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 91.52,
+     "lineHeightPx": 105.6,
+     "trackingEm": 0.0,
+     "color": "#ffffff",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Reception",
+     "mixed": false,
+     "bbox": [
+      100,
+      380,
+      980,
+      494
+     ],
+     "bboxSize": [
+      880,
+      114
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 463.0,
+      "firstLineTopY": 380,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Reception",
+       "sizePx": 91.52,
+       "lineHeightPx": 105.6,
+       "color": "#ffffff",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Reception",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Reception",
+       "fontFamily": "Rungkut",
+       "fontWeight": 400,
+       "psdFont": "Rungkut",
+       "sizePx": 91.52,
+       "renderSizePx": 91.52,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 86.10413679999999,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": true,
+       "fauxItalic": false,
+       "color": "#ffffff"
+      }
+     ]
+    },
+    {
+     "id": "what",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "Reception",
+     "lines": [
+      "Reception"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 56.0,
+     "lineHeightPx": 64.0,
+     "trackingEm": 0.0,
+     "color": "#f7e6c8",
+     "textAlign": "center",
+     "textTransform": "uppercase",
+     "outline": null,
+     "displayText": "Reception",
+     "mixed": false,
+     "bbox": [
+      100,
+      605,
+      980,
+      667
+     ],
+     "bboxSize": [
+      880,
+      62
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 650.0,
+      "firstLineTopY": 605,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Reception",
+       "sizePx": 56.0,
+       "lineHeightPx": 64.0,
+       "color": "#f7e6c8",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "uppercase",
+       "displayText": "Reception",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Reception",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 56.0,
+       "renderSizePx": 56.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 35.6134,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "uppercase",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#f7e6c8"
+      }
+     ]
+    },
+    {
+     "id": "when",
+     "layerName": null,
+     "layerPath": null,
+     "visible": true,
+     "text": "Time 6:00 PM Onwards",
+     "lines": [
+      "Time 6:00 PM Onwards"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 40.0,
+     "lineHeightPx": 48.0,
+     "trackingEm": 0.0,
+     "color": "#f7e6c8",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Time 6:00 PM Onwards",
+     "mixed": false,
+     "bbox": [
+      100,
+      702,
+      980,
+      746
+     ],
+     "bboxSize": [
+      880,
+      44
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 734.0,
+      "firstLineTopY": 702,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Time 6:00 PM Onwards",
+       "sizePx": 40.0,
+       "lineHeightPx": 48.0,
+       "color": "#f7e6c8",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Time 6:00 PM Onwards",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Time 6:00 PM Onwards",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 40.0,
+       "renderSizePx": 40.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 35.6134,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#f7e6c8"
+      }
+     ]
+    },
+    {
+     "id": "venue",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "Venue: Grande Salao",
+     "lines": [
+      "Venue: Grande Salao"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 36.0,
+     "lineHeightPx": 44.0,
+     "trackingEm": 0.0,
+     "color": "#f7e6c8",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Venue: Grande Salao",
+     "mixed": false,
+     "bbox": [
+      100,
+      739,
+      980,
+      779
+     ],
+     "bboxSize": [
+      880,
+      40
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 768.0,
+      "firstLineTopY": 739,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Venue: Grande Salao",
+       "sizePx": 36.0,
+       "lineHeightPx": 44.0,
+       "color": "#f7e6c8",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Venue: Grande Salao",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Venue: Grande Salao",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 36.0,
+       "renderSizePx": 36.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 35.6134,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#f7e6c8"
+      }
+     ]
+    },
+    {
+     "id": "attire",
+     "layerName": null,
+     "layerPath": null,
+     "visible": false,
+     "text": "Attire: Glam & Shimmer",
+     "lines": [
+      "Attire: Glam & Shimmer"
+     ],
+     "fontFamily": "Cormorant Garamond",
+     "fontWeight": 600,
+     "fontFamilies": [
+      "Cormorant Garamond"
+     ],
+     "psdFonts": [
+      "CormorantGaramond-SemiBold"
+     ],
+     "substitutedFonts": [],
+     "sizePx": 46.0,
+     "lineHeightPx": 56.0,
+     "trackingEm": 0.0,
+     "color": "#f1c983",
+     "textAlign": "center",
+     "textTransform": "none",
+     "outline": null,
+     "displayText": "Attire: Glam & Shimmer",
+     "mixed": false,
+     "bbox": [
+      100,
+      825,
+      980,
+      876
+     ],
+     "bboxSize": [
+      880,
+      51
+     ],
+     "anchor": {
+      "x": 540.0,
+      "baselineY": 862.0,
+      "firstLineTopY": 825,
+      "bboxCenterX": 540.0,
+      "centerDeltaX": 0.0
+     },
+     "transformScale": null,
+     "superscriptFactors": {
+      "size": 0.583,
+      "position": 0.333
+     },
+     "lineStyles": [
+      {
+       "index": 0,
+       "text": "Attire: Glam & Shimmer",
+       "sizePx": 46.0,
+       "lineHeightPx": 56.0,
+       "color": "#f1c983",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "trackingEm": 0.0,
+       "textTransform": "none",
+       "displayText": "Attire: Glam & Shimmer",
+       "mixed": false
+      }
+     ],
+     "runs": [
+      {
+       "line": 0,
+       "text": "Attire: Glam & Shimmer",
+       "fontFamily": "Cormorant Garamond",
+       "fontWeight": 600,
+       "psdFont": "CormorantGaramond-SemiBold",
+       "sizePx": 46.0,
+       "renderSizePx": 46.0,
+       "renderRaisePx": 0.0,
+       "psdFontSize": 39.57044,
+       "trackingEm": 0.0,
+       "letterSpacingPx": 0.0,
+       "baselineShiftPx": 0.0,
+       "superscript": false,
+       "fontFeatures": [],
+       "geometrySource": "authored",
+       "textTransform": "none",
+       "ligatures": true,
+       "fauxBold": false,
+       "fauxItalic": false,
+       "color": "#f1c983"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "hiddenLayers": [
+  {
+   "scene": "cover",
+   "id": "date-range",
+   "layerName": "10th – 11th November, 2026",
+   "layerPath": "/logo/10th – 11th November, 2026",
+   "lines": [
+    "10th – 11th",
+    "November, 2026"
+   ],
+   "bbox": [
+    302,
+    364,
+    777,
+    464
+   ],
+   "sizePx": 45.83,
+   "color": "#b52645",
+   "reason": "hidden in the PSD; superseded by the visible split date blocks"
+  },
+  {
+   "scene": "cover",
+   "id": null,
+   "layerName": "logo",
+   "layerPath": "/logo",
+   "lines": [],
+   "bbox": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sizePx": null,
+   "color": null,
+   "reason": "group hidden in the PSD; not descended into -- its children keep their own visible flag and would duplicate live blocks"
+  }
+ ],
+ "_overrides": "tools/apply_overrides.py: Deepesh & Bhavna copy over the shourya-muskan extraction (shekhar-nupur layout: Ganesha + shloka names slide, map slide; events, Best wishes slide, Welcome by page)"
+}

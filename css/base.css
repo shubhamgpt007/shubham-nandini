@@ -1,0 +1,158 @@
+/* base.css — reset, design + motion tokens, a11y helpers.
+ *
+ * Palette values are sampled from the source artwork (the seven slide renders), not
+ * invented: run-of-the-mill dominant-colour sampling over each slide gives the sky,
+ * paper and night-navy anchors below. Rose / sage / gold are the recurring accent
+ * inks of the illustration set.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* ---- design frame -------------------------------------------------- */
+  --design-w: 1080;
+  --design-h: 1920;
+
+  /* ---- palette (sampled from the slide renders) ---------------------- */
+  --paper: #f6f1e7;        /* ivory watercolour paper */
+  --paper-warm: #ede1d6;   /* mehendi slide blush paper */
+  --paper-deep: #e6d6c4;
+  --sky: #c4dfef;          /* cover-slide sky */
+  --sky-pale: #e0eaef;     /* names-slide sky */
+  --sky-aqua: #c9e5ec;     /* haldi sky */
+  --night: #051333;        /* cocktail navy */
+  --night-2: #0d2a52;
+  --rose: #b4425f;
+  --rose-soft: #e3a9b7;
+  --sage: #7b8b5e;
+  --sage-deep: #4c5f3c;
+  --gold: #c9a35c;
+  --gold-hi: #e8d2a2;
+  --ink: #3a3128;
+  --ivory: #fbf7ef;
+
+  /* ---- page shell ---------------------------------------------------- */
+  --page-bg: #1a1712;      /* only ever seen behind the desktop phone-stage */
+  --stage-void: var(--paper);
+
+  /* ---- motion tokens ------------------------------------------------- */
+  --dur-xs: 160ms;
+  --dur-sm: 260ms;
+  --dur-md: 400ms;
+  --dur-lg: 700ms;
+  --dur-xl: 1100ms;
+
+  /* stage-owned durations (js/stage.js reads the same numbers from MOTION) */
+  --dur-enter: 600ms;      /* full entry cascade, underlay -> base -> layers */
+  --dur-forward: 700ms;    /* default "bloom" forward transition */
+  --dur-back: 400ms;       /* default back crossfade */
+  --dur-backdrop: 900ms;   /* desktop backdrop crossfade */
+
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-bloom: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* entry rise, expressed in DESIGN px because the frame is uniformly scaled:
+     12 design px ~= 4 css px on a 390px-wide phone (scale 0.361). */
+  --rise: 12px;
+
+  /* ---- safe area ----------------------------------------------------- */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+}
+
+/* Reduced motion: collapse every duration token to "instant". js/stage.js mirrors
+   this by multiplying its own durations by 0 — CSS and JS never disagree. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-xs: 0.01ms;
+    --dur-sm: 0.01ms;
+    --dur-md: 0.01ms;
+    --dur-lg: 0.01ms;
+    --dur-xl: 0.01ms;
+    --dur-enter: 0.01ms;
+    --dur-forward: 0.01ms;
+    --dur-back: 0.01ms;
+    --dur-backdrop: 0.01ms;
+    --rise: 0px;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  background: var(--page-bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* The experience never scrolls: the stage is a fixed, paged surface. */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--ink);
+  font-family: "Georgia", "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* the illustration is the content; text selection would only ever be a mis-tap */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  display: block;
+  max-width: none; /* layers are sized in design px by stage.css — never shrink-to-fit */
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+/* visible focus for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 3px;
+}
+
+/* visually hidden but available to assistive tech */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

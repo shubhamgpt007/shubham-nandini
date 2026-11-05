@@ -1,0 +1,254 @@
+/* nav.css — dots rail, back / next chevrons, mute toggle.
+ *
+ * Every control: 44px hit area, a much smaller visual mark centred inside it, ivory/gold
+ * on a soft translucent disc, transform/opacity-only motion, visible focus ring,
+ * aria-labelled (no text labels — the invitation copy arrives in a later phase).
+ *
+ * Chrome is kept near-invisible on purpose: no opaque plates. Legibility over the
+ * artwork comes from a delicate outline + soft shadow on each mark instead, tuned per
+ * tone-variant so the same marks read on both pale watercolour skies and the navy
+ * night scene.
+ */
+
+.nav-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none; /* only the controls themselves take input */
+}
+
+/* --------------------------------------------------------- shared control */
+
+.nav-btn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--ivory);
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    opacity var(--dur-sm) var(--ease-out),
+    transform var(--dur-sm) var(--ease-out);
+}
+
+/* the visible disc sits on its own layer, inset from the 44px hit box, so the tap
+   target stays full-size while the mark itself reads as slim and jewellery-light.
+   No backdrop-filter here: stacked with the scene's own controls it silently failed to
+   paint at desktop viewport widths — a plain tinted disc + ring reads just as soft
+   without that risk. (The template now carries no backdrop-filter at all: it is the
+   most expensive primitive a compositor has, and the finale's replay button, which
+   used to be the other one, is a solid plate for the same reason.) */
+.nav-btn::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: rgba(251, 247, 239, 0.32);
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 210, 162, 0.5),
+    0 2px 8px rgba(58, 49, 40, 0.16);
+}
+
+.nav-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px rgba(58, 49, 40, 0.4));
+}
+
+.nav-btn:active {
+  transform: translate3d(0, 0, 0) scale(0.92);
+}
+
+/* hidden = out of the tab order and non-interactive, not merely invisible */
+.nav-btn[hidden] {
+  display: none;
+}
+
+/* ------------------------------------------------------------ back / next */
+
+.nav-btn--back {
+  top: calc(var(--safe-t) + 14px);
+  left: calc(var(--safe-l) + 14px);
+}
+
+.nav-btn--next {
+  right: calc(var(--safe-r) + 14px);
+  bottom: calc(var(--safe-b) + 74px); /* clears the dots rail */
+  animation: ms-next-pulse 2.6s var(--ease-in-out) infinite;
+}
+
+@keyframes ms-next-pulse {
+  0%,
+  62%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.86;
+  }
+  30% {
+    transform: translate3d(3px, 0, 0) scale(1.06);
+    opacity: 1;
+  }
+}
+
+.nav-btn--mute {
+  top: calc(var(--safe-t) + 14px);
+  right: calc(var(--safe-r) + 14px);
+}
+
+.nav-btn--mute .icon-on {
+  display: block;
+}
+.nav-btn--mute .icon-off {
+  display: none;
+}
+.nav-btn--mute[aria-pressed="false"] .icon-on {
+  display: none;
+}
+.nav-btn--mute[aria-pressed="false"] .icon-off {
+  display: block;
+}
+
+/* ------------------------------------------------------------- dots rail */
+
+/* No plate behind the row — the rail itself is just a positioning/flex container.
+   Each dot carries its own delicate outline + soft shadow (below) so the marks read
+   directly against the artwork, on both pale paper/sky and the navy cocktail scene. */
+.nav-rail {
+  position: absolute;
+  bottom: calc(var(--safe-b) + 10px);
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(100% - 24px); /* 7 x 44px targets clamp instead of overflowing */
+  padding: 0 6px;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.nav-rail__list {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the <li> is the flex item, so it carries the shrink budget; the button fills it */
+.nav-rail__list > li {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* 44x44 hit area, 8px visual mark. Shrinks (never overflows) below ~320px wide. */
+.dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 26px;
+  max-width: 100%;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.dot__mark {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(251, 247, 239, 0.5);
+  box-shadow: 0 0 0 1px rgba(58, 49, 40, 0.2);
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    transform var(--dur-md) var(--ease-soft),
+    background-color var(--dur-md) var(--ease-out),
+    box-shadow var(--dur-md) var(--ease-out),
+    opacity var(--dur-md) var(--ease-out);
+}
+
+/* visited (unlocked, tappable) — soft ivory with a delicate ink outline so it keeps a
+   crisp edge even against pale paper/sky, where a plain ivory fill would nearly vanish */
+.dot[data-state="visited"] .dot__mark {
+  background: var(--ivory);
+  box-shadow:
+    0 0 0 1px rgba(58, 49, 40, 0.32),
+    0 1px 3px rgba(58, 49, 40, 0.22);
+}
+
+/* current — elongated. scaleX on an 8px circle rather than a width animation:
+   width is a layout property and must never be animated. At this size the resulting
+   ellipse is visually indistinguishable from a stadium.
+   Fill is the deeper --gold (not --gold-hi): pale champagne alone is too close in
+   value to the paper/sky to read as "active" without the old dark plate behind it. */
+.dot[data-state="current"] .dot__mark {
+  background: var(--gold);
+  box-shadow:
+    0 0 0 1px rgba(58, 49, 40, 0.18),
+    0 0 7px rgba(232, 210, 162, 0.7);
+  transform: scaleX(2.6);
+}
+
+/* locked — dim and inert (the <button> is `disabled`, so it is out of the tab order).
+   Left without an outline on purpose: these are future scenes, not yet worth the eye. */
+.dot[data-state="locked"] {
+  cursor: default;
+}
+
+.dot[data-state="locked"] .dot__mark {
+  background: rgba(251, 247, 239, 0.3);
+  box-shadow: none;
+  opacity: 0.55;
+  transform: scale(0.72);
+}
+
+.dot:focus-visible {
+  border-radius: 12px;
+}
+
+/* night scenes (cocktail): ink reads as nothing against navy, so the outline/glow
+   flips to gold-on-navy instead of dropping legibility support altogether. */
+.stage.is-tone-dark .nav-btn::before {
+  background: rgba(13, 42, 82, 0.34);
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 210, 162, 0.4),
+    0 2px 10px rgba(5, 19, 51, 0.4);
+}
+
+.stage.is-tone-dark .dot__mark {
+  box-shadow: 0 0 0 1px rgba(232, 210, 162, 0.3);
+}
+
+.stage.is-tone-dark .dot[data-state="visited"] .dot__mark {
+  box-shadow:
+    0 0 0 1px rgba(232, 210, 162, 0.4),
+    0 0 5px rgba(5, 19, 51, 0.5);
+}
+
+.stage.is-tone-dark .dot[data-state="current"] .dot__mark {
+  box-shadow:
+    0 0 0 1px rgba(232, 210, 162, 0.55),
+    0 0 9px rgba(232, 210, 162, 0.75);
+}
+
+.stage.is-tone-dark .dot[data-state="locked"] .dot__mark {
+  box-shadow: none;
+}
