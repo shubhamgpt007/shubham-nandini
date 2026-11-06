@@ -66,7 +66,7 @@
  * the un-split one.
  */
 
-const SPEC_URL = "data/textspec.json?v=57";
+const SPEC_URL = "data/textspec.json?v=59";
 
 const DESIGN_W = 1080;
 

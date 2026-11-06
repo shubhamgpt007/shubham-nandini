@@ -48,7 +48,8 @@
 .ns-venue-block__heading-text {
   display: block;
   max-width: 100%;
-  font: 600 14px/1.15 "Cormorant Garamond", Georgia, serif;
+  /* Viewport-relative: readable on phones; program sits on .scene (not design frame). */
+  font: 600 clamp(15px, 3.6vw, 20px)/1.15 "Cormorant Garamond", Georgia, serif;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: #1f1f1f;
@@ -95,7 +96,7 @@
 
 .ns-venue-block__place {
   margin: 0 0 8px;
-  font: 400 16px/1.35 "Cormorant Garamond", Georgia, serif;
+  font: 400 clamp(16px, 4vw, 22px)/1.35 "Cormorant Garamond", Georgia, serif;
   color: #222222;
 }
 
@@ -105,7 +106,7 @@
 
 .ns-venue-block__link {
   display: inline-block;
-  font: 400 14px/1.35 "Cormorant Garamond", Georgia, serif;
+  font: 400 clamp(15px, 3.6vw, 20px)/1.35 "Cormorant Garamond", Georgia, serif;
   color: #1a1a1a;
   text-decoration: underline;
   text-decoration-color: rgba(26, 26, 26, 0.35);
@@ -127,7 +128,7 @@
 .ns-compliments-program__footer {
   margin: 4px 0 0;
   text-align: center;
-  font: italic 400 15px/1.35 "Cormorant Garamond", Georgia, serif;
+  font: italic 400 clamp(15px, 3.8vw, 20px)/1.35 "Cormorant Garamond", Georgia, serif;
   color: #3d3d3d;
   pointer-events: none;
 }

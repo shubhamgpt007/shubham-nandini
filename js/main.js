@@ -18,7 +18,7 @@
 import { createStage } from "./stage.js?v=3";
 import { createNav } from "./nav.js?v=1";
 import { initAudio } from "./audio.js?v=1";
-import "./scenes/index.js?v=29"; /* scene modules self-register on `stage:ready` */
+import "./scenes/index.js?v=30"; /* scene modules self-register on `stage:ready` */
 import "./ns-venue.js?v=11";
 
 async function loadJSON(url) {

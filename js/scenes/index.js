@@ -12,7 +12,7 @@
  * (imported by css/scenes.css). No other file in the template needs to change.
  */
 
-import "./cover.js?v=21";
+import "./cover.js?v=22";
 import "./names.js?v=13";
 import "./mayra-mehendi.js?v=13";
 import "./cocktail.js?v=13";

@@ -14,5 +14,3 @@ Static wedding invitation (HTML/CSS/JS). Open **`index.html`** via any static ho
 python3 -m http.server 8080 --bind 127.0.0.1
 # open http://127.0.0.1:8080/
 ```
-
-Source edits are maintained in the `marriage-project-deepesh` workspace; rebuild with `scripts/build_deploy.py` there and copy this tree again.

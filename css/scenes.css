@@ -37,7 +37,7 @@
    --ms-* tokens documented in that file, scoped to its own .scene selector. */
 @import url("fx/text.css?v=3");
 
-@import url("scenes/cover.css?v=8");
+@import url("scenes/cover.css?v=9");
 @import url("scenes/names.css?v=7");
 @import url("scenes/haldi.css?v=4");
 @import url("scenes/cocktail.css?v=6");

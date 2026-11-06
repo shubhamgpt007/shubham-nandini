@@ -136,10 +136,15 @@ function mountCartouche(ctx) {
   return img;
 }
 
-/** N&S monogram — pinned to the VIEWPORT top of .scene (frame is offset down by layout). */
+/** N&S monogram — pinned to .scene top; sized to fit ABOVE couple-names on any screen. */
 const NS_LOGO = {
   src: "assets/scenes/opening/NS-logo.png?v=2",
-  width: 248
+  width: 248,
+  /* Design-Y of cover couple-names (textspec) — logo must stay above this. */
+  namesTopDesign: 200,
+  gap: 12,
+  minTop: 8,
+  maxFracOfGap: 0.92
 };
 
 function readCoverFrameScale(frame) {
@@ -151,11 +156,34 @@ function readCoverFrameScale(frame) {
 }
 
 function syncNsLogoLayout(ctx, slot) {
-  if (!slot || !slot.isConnected) return;
+  if (!slot || !slot.isConnected || !ctx.el || !ctx.frame) return;
+  const img = slot.querySelector(".cv-ns-logo");
   const scale = readCoverFrameScale(ctx.frame);
-  slot.style.width = Math.round(NS_LOGO.width * scale) + "px";
+  const sceneRect = ctx.el.getBoundingClientRect();
+  const frameRect = ctx.frame.getBoundingClientRect();
+
+  /* Where names start in viewport → available band for the logo under scene top. */
+  const namesTopPx = frameRect.top + NS_LOGO.namesTopDesign * scale - sceneRect.top;
+  const safePad = parseFloat(getComputedStyle(slot).paddingTop) || 0;
+  const top = Math.max(NS_LOGO.minTop, safePad > 0 ? 0 : NS_LOGO.minTop);
+  const band = Math.max(24, namesTopPx - top - NS_LOGO.gap);
+
+  let width = NS_LOGO.width * scale;
+  const nw = img && img.naturalWidth ? img.naturalWidth : 0;
+  const nh = img && img.naturalHeight ? img.naturalHeight : 0;
+  if (nw > 0 && nh > 0) {
+    const maxH = band * NS_LOGO.maxFracOfGap;
+    const hAtWidth = (nh / nw) * width;
+    if (hAtWidth > maxH) width = maxH * (nw / nh);
+  } else {
+    /* Before decode: assume roughly square so we still clamp. */
+    width = Math.min(width, band * NS_LOGO.maxFracOfGap);
+  }
+
+  slot.style.width = Math.max(28, Math.round(width)) + "px";
+  slot.style.maxHeight = Math.round(band) + "px";
   slot.style.left = "50%";
-  slot.style.top = "50px";
+  slot.style.top = top + "px";
   slot.style.transform = "translateX(-50%)";
 }
 
